@@ -15,7 +15,7 @@
               <input type="text" name="email" placeholder="Email"/>
               <input type="password" name="password" placeholder="Password"/>
 	      <input type="password" name="confirm_password" placeholder="Confirm password"/>
-              <button type="submit" class="small button">Login</button>
+              <button type="submit" class="small button">Signup</button>
 	      % if error == "dup":
 	      <div data-alert class="alert-box alert">
                 A user already exists with this email
