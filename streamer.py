@@ -43,7 +43,10 @@ def authenticate():
 
 @get('/signup')
 def signup():
-    return template("signup", error=None)
+    if request.get_cookie("email") is not None:
+        redirect("/home")
+    else:
+        return template("signup", error=None)
 
 @get('/logout')
 def logout():

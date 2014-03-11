@@ -5,6 +5,28 @@
   </head>
   
   <body>
+
+    <nav class="top-bar" data-topbar>
+      <ul class="title-area">
+	<li class="name">
+	  <h1><a href="#">Antisocial Streamer</a></h1>
+	</li>
+
+      </ul>
+      
+      <section class="top-bar-section">
+	<!-- Right Nav Section -->
+	<ul class="right">
+	  <li class="active"><a href="/signup">Sign up</a></li>
+	</ul>
+	
+	<!-- Left Nav Section -->
+	<ul class="left">
+
+	</ul>
+      </section>
+    </nav>
+
     
     <div class="text-center">
       <div class="show-for-large-up" style="height:100px"></div>
