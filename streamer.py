@@ -1,10 +1,14 @@
-import bcrypt, json, sqlite3
+import bcrypt, json, sqlite3, os, fnmatch, eyeD3
 from bottle import *
 
 master_secret_key = ""
 
 with open("keys", "r") as keys:
     master_secret_key = keys.read()
+
+@error(404)
+def error404(error):
+    return template("404")
 
 @get('/')
 def index():
@@ -113,4 +117,75 @@ def create_user(email, raw_password, is_admin):
     conn.commit()
     conn.close()
     
+
+
+def find_files(directory, pattern):
+    files_with_path = []
+    for root, dirs, files in os.walk(directory):
+        for basename in files:
+            if fnmatch.fnmatch(basename, pattern):
+                filename = os.path.join(root, basename)
+                files_with_path.append([root, basename])
+
+    return files_with_path
+
+@get('/play/song/<music_id>')
+def serve_music(music_id):
+    conn = sqlite3.connect("db/data.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT file_path, file_name FROM Songs WHERE id = ?", [music_id])
+    result = cursor.fetchone()
+    if result is None:
+        return error404(None)
+    file_path = result[0]
+    file_name = result[1]
+    conn.close()
+    return static_file(file_name, root=file_path)
+
+
+def populate_db():
+    music_files = find_files(os.path.expanduser("~/"), "*.mp3")
+    conn = sqlite3.connect("db/data.db")
+    artist_history = []
+    album_history = []
+
+    for item in music_files:
+        tag = eyeD3.Tag()
+        tag.link(item[0] + "/" + item[1])
+        artist = tag.getArtist()
+        album = tag.getAlbum()
+        track = tag.getTitle()
+
+        cursor = conn.cursor()
+
+        try:
+            if artist and artist not in artist_history:
+                cursor.execute("INSERT INTO Artists (artist_name) VALUES (?)", [artist])
+                artist_history.append(artist)
+        except sqlite3.IntegrityError:
+            print "! Integrity Error !"
+        
+        try:
+            if album and artist and album not in album_history:
+                cover_art = find_files(item[0], "*.jpg")
+                if len(cover_art) == 1:
+                    cursor.execute("INSERT INTO Albums (album_name, artist_name, cover_art_file) VALUES (?, ?, ?)", [album, artist, cover_art[0][0] + "/" + cover_art[0][1]])
+                else:
+                    cursor.execute("INSERT INTO Albums (album_name, artist_name, cover_art_file) VALUES (?, ?, ?)", [album, artist, "?"])
+                album_history.append(album)
+        except sqlite3.IntegrityError:
+            print "! Integrity Error !"
+
+        try:
+            if album and artist and track:
+                cursor.execute("INSERT INTO Songs (artist_name, title, album_name, file_path, file_name) VALUES (?, ?, ?, ?, ?)", [artist, track, album, item[0], item[1]])
+        except sqlite3.IntegrityError:
+            print "! Integrity Error !"
+
+        conn.commit()
+        
+
+    conn.close()
+
+populate_db()
 run(host="0.0.0.0", port=8080, debug=True)

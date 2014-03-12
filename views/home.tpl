@@ -27,6 +27,10 @@
 	</ul>
       </section>
     </nav>
+
+    <video controls autoplay name="media">
+      <source src="http://localhost:8080/play/song/1" type="audio/mpeg">
+    </video>
     
   </body>
 </html>
