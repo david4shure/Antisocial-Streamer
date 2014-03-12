@@ -26,7 +26,8 @@ CREATE TABLE Albums (
        id integer PRIMARY KEY,
        album_name varchar(100),
        artist_name varchar(100),
-       cover_art_file varchar(100),
+       cover_art_file_path varchar(100),
+       cover_art_file_name varchar(100),
        UNIQUE (album_name, artist_name),
        FOREIGN KEY (artist_name) REFERENCES Artists (artist_name)
 );
