@@ -2,23 +2,8 @@
   <head>
     <title>Antisocial Streamer</title>
     <link href="/static/foundation.min.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="/js/jquery.jplayer.min.js"></script>
-    <script type="text/javascript">
-    $(document).ready(function(){
-      $("#jquery_jplayer_1").jPlayer({
-        ready: function () {
-          $(this).jPlayer("setMedia", {
-            m4a: "http://www.jplayer.org/audio/m4a/Miaow-07-Bubble.m4a",
-            oga: "http://www.jplayer.org/audio/ogg/Miaow-07-Bubble.ogg"
-          });
-        },
-        swfPath: "/js",
-        supplied: "m4a, oga"
-      });
-    });
-    </script>
-
-
+    <script type="text/javascript" src="/static/foundation.min.js"></scirpt>
+    <script type="text/javascript" src="/static/foundation.orbit.js"></script>
   </head>
   
   <body>
@@ -26,9 +11,8 @@
     <nav class="top-bar" data-topbar>
       <ul class="title-area">
 	<li class="name">
-	  <h1><a href="#">Antisocial Streamer</a></h1>
+	  <h1><a href="/home">Antisocial Streamer</a></h1>
 	</li>
-	<li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
       </ul>
       
       <section class="top-bar-section">
@@ -45,9 +29,31 @@
       </section>
     </nav>
 
-    <video controls autoplay name="media">
-      <source src="http://localhost:8080/play/song/1" type="audio/mpeg">
-    </video>
-    
+    <div class="row">
+      <h4 class="subheader text-center">Some Recomendations</h4>
+    </div>
+
+    <div class="panel">
+      % for album_id in album_art_ids:
+      
+      <a class="th" href="/album/{{album_id[0]}}">
+	<img src="/art/{{ album_id[0] }}" width="300" height="300">
+      </a>
+      
+      % end
+      <div class="row">
+	
+      </div>
+    </div>
+
+
+    <!-- <div class="panel"> -->
+    <!--   <div class="row"> -->
+    <!-- 	<div class="large-20 columns"> -->
+    <!-- 	  Some Assorted Albums -->
+    <!-- 	</div> -->
+    <!--   </div> -->
+    <!-- </div> -->
+
   </body>
 </html>

@@ -8,7 +8,7 @@
     <nav class="top-bar" data-topbar>
       <ul class="title-area">
 	<li class="name">
-	  <h1><a href="#">Antisocial Streamer</a></h1>
+	  <h1><a href="/login">Antisocial Streamer</a></h1>
 	</li>
 
       </ul>

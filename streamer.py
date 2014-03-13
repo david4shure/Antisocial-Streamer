@@ -29,7 +29,7 @@ def login_error(error):
 def serve_static(filename):
     return static_file(filename, root="./static")
 
-@get('/play/song/<music_id>')
+@get('/song/<music_id>')
 def serve_music(music_id):
     conn = sqlite3.connect("db/data.db")
     cursor = conn.cursor()
@@ -50,10 +50,22 @@ def serve_album_art(album_id):
     result = cursor.fetchone()
     if result is None:
         return error404(None)
+
     art_file_path = result[0]
     art_file_name = result[1]
+    print "Art_file_path: " + repr(art_file_path) + " Art_file_name: " + repr(art_file_name)
     conn.close()
     return static_file(art_file_name, root=art_file_path)
+
+@get('/album/<album_id>')
+def album(album_id):
+    conn = sqlite3.connect("db/data.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT album_name FROM Albums WHERE id = ?", [album_id])
+    album_name = cursor.fetchone()[0]
+    cursor.execute("SELECT * FROM Songs WHERE album_name = ?", [album_name])
+    results = cursor.fetchall()
+    return template("album", songs=results, email=request.get_cookie("email"))
 
 @post('/auth')
 def authenticate():
@@ -108,7 +120,12 @@ def home():
     if request.get_cookie("email") is None:
         redirect("login")
     else:
-        return template("home", email=request.get_cookie("email"))
+        conn = sqlite3.connect("db/data.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT DISTINCT id FROM Albums WHERE cover_art_file_path IS NOT NULL ORDER BY RANDOM() LIMIT 6")
+        ids = cursor.fetchall()
+        conn.close()
+        return template("home", email=request.get_cookie("email"), album_art_ids=ids)
 
 def authenticate_user(email, raw_password):
     global master_secret_key
@@ -152,47 +169,81 @@ def find_files(directory, pattern):
 
     return files_with_path
 
-def populate_db():
-    music_files = find_files(os.path.expanduser("~/"), "*.mp3")
+def populate_db(directory, extension):
+    music_files = find_files(os.path.expanduser(directory), extension)
     conn = sqlite3.connect("db/data.db")
-
-    artist_history = []
-    album_history = []
+    conn.text_factory = str
 
     for item in music_files:
         tag = eyeD3.Tag()
         tag.link(item[0] + "/" + item[1])
+
         artist = tag.getArtist()
         album = tag.getAlbum()
         track = tag.getTitle()
-
+        
         cursor = conn.cursor()
 
+
+
+        print "Artist: " + artist + " Album: " + album + " Track: " + track
+
         try:
-            if artist and artist not in artist_history:
-                cursor.execute("INSERT INTO Artists (artist_name) VALUES (?)", [artist])
-                artist_history.append(artist)
+            cursor.execute("INSERT INTO Artists (artist_name) VALUES (?)", [artist])
         except sqlite3.IntegrityError:
             print "! Artist Integrity Error !"
         except sqlite3.ProgrammingError:
             print "! Album Programming Error !"
         
         try:
-            if album and artist and album not in album_history:
-                cover_art = find_files(item[0], "*.jpg")
-                if len(cover_art) == 1:
-                    cursor.execute("INSERT INTO Albums (album_name, artist_name, cover_art_file_path, cover_art_file_name) VALUES (?, ?, ?, ?)", [album, artist, cover_art[0][0], cover_art[0][1]])
-                else:
-                    cursor.execute("INSERT INTO Albums (album_name, artist_name, cover_art_file_path, cover_art_file_name) VALUES (?, ?, ?, ?)", [album, artist, "?", "?"])
-                album_history.append(album)
+            cover_art = find_files(item[0], "*.jpg")
+            params_array = [album, artist.lower()]
+            if len(cover_art) == 1:
+                params_array.append(cover_art[0][0])
+                params_array.append(cover_art[0][1])
+            else:
+                params_array.append(None)
+                params_array.append(None)
+
+            if not tag.getYear():
+                print "! No year !"
+
+            params_array.append(str(tag.getYear()))
+
+            genre = tag.getGenre()
+
+            if genre:
+                params_array.append(genre.name)
+            else:
+                params_array.append(None)
+
+            print "Length of params arr: " + str(len(params_array))
+
+            cursor.execute("INSERT INTO Albums (album_name, artist_name, cover_art_file_path, cover_art_file_name, release_year, genre) VALUES (?, ?, ?, ?, ?, ?)", params_array)
+            print "Inserting into albums the following params: " + str(params_array)
         except sqlite3.IntegrityError:
             print "! Album Integrity Error !"
-        except sqlite3.ProgrammingError:
-            print "! Album Programming Error !"
 
         try:
             if album and artist and track:
-                cursor.execute("INSERT INTO Songs (artist_name, title, album_name, file_path, file_name) VALUES (?, ?, ?, ?, ?)", [artist, track, album, item[0], item[1]])
+                params_array = []
+
+                params_array.append(artist.lower())
+                params_array.append(track)
+                params_array.append(album)
+
+                params_array.append(item[0])
+                params_array.append(item[1])
+
+                year = tag.getYear()
+
+                if year:
+                    params_array.append(year)
+                else:
+                    params_array.append(None)
+                    
+                cursor.execute("INSERT INTO Songs (artist_name, title, album_name, file_path, file_name, release_year) VALUES (?, ?, ?, ?, ?, ?)", params_array)
+
         except sqlite3.IntegrityError:
             print "! Song Integrity Error !"
         except sqlite3.ProgrammingError:
@@ -202,5 +253,6 @@ def populate_db():
         
     conn.close()
 
-populate_db()
+populate_db("~/", "*.mp3")
+
 run(host="0.0.0.0", port=8080, debug=True)
