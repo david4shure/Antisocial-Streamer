@@ -43,19 +43,16 @@ def serve_music(music_id):
     return static_file(file_name, root=file_path)
 
 @get('/art/<album_id>')
-def serve_album_art(album_id):
+def art_files(album_id):
     conn = sqlite3.connect("db/data.db")
     cursor = conn.cursor()
     cursor.execute("SELECT cover_art_file_path, cover_art_file_name FROM Albums WHERE id = ?", [album_id])
-    result = cursor.fetchone()
-    if result is None:
-        return error404(None)
-
-    art_file_path = result[0]
-    art_file_name = result[1]
-    print "Art_file_path: " + repr(art_file_path) + " Art_file_name: " + repr(art_file_name)
-    conn.close()
-    return static_file(art_file_name, root=art_file_path)
+    results = cursor.fetchall()
+    if results[0][0] is None:
+        return error404("")
+    file_name = results[0][1]
+    file_path = results[0][0]
+    return static_file(file_name, root=file_path)
 
 @get('/album/<album_id>')
 def album(album_id):
@@ -122,7 +119,7 @@ def home():
     else:
         conn = sqlite3.connect("db/data.db")
         cursor = conn.cursor()
-        cursor.execute("SELECT DISTINCT id FROM Albums WHERE cover_art_file_path IS NOT NULL ORDER BY RANDOM() LIMIT 6")
+        cursor.execute("SELECT DISTINCT id FROM Albums WHERE cover_art_file_path IS NOT NULL and cover_art_file_name IS NOT NULL ORDER BY RANDOM() LIMIT 6")
         ids = cursor.fetchall()
         conn.close()
         return template("home", email=request.get_cookie("email"), album_art_ids=ids)

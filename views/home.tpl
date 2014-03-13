@@ -36,7 +36,7 @@
     <div class="panel">
       % for album_id in album_art_ids:
       
-      <a class="th" href="/album/{{album_id[0]}}">
+      <a class="th" href="/album/{{ album_id[0] }}">
 	<img src="/art/{{ album_id[0] }}" width="300" height="300">
       </a>
       
