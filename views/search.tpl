@@ -2,8 +2,8 @@
   <head>
     <title>Antisocial Streamer</title>
     <link href="/static/foundation.min.css" rel="stylesheet" type="text/css">
-    <!-- <script type="text/javascript" src="/static/foundation.min.js"></scirpt> -->
-    <!-- <script type="text/javascript" src="/static/foundation.orbit.js"></script> -->
+    <script type="text/javascript" src="/static/foundation.min.js"></scirpt>
+    <script type="text/javascript" src="/static/foundation.orbit.js"></script>
   </head>
   
   <body>
@@ -45,27 +45,39 @@
       </section>
     </nav>
 
-    <div class="row">
-      <h4 class="subheader text-center">Recommendations</h4>
+    <h4 class="subheader text-center">Search Results</h4>
+
+
+    <div class="panel">
+      % for song in songs:
+      <div class="row">
+	<div class="large-6 small-3 columns">
+	  <a href="/song/{{ song[0] }}">{{ song[2] }}</a> by {{ song[1] }} on {{ song[3] }}
+	</div>
+      </div>
+      % end
     </div>
 
     <div class="panel">
-      % for album_id in album_art_ids:
-      
-      <a class="th" href="/album/{{ album_id[0] }}">
-	<img src="/art/{{ album_id[0] }}" style="width:300px;height:300px;">
-      </a>
-      
+      % for album in albums:
+      <div class="row">
+	<a href="/album/{{album[0]}}">{{ album[1] }}</a>
+      </div>
       % end
-      <!-- <div class="row"> -->
-	
-      <!-- </div> -->
     </div>
 
-    
+
+    <div class="panel">
+      % for artist in artists:
+      <div class="row">
+	{{ artist[1] }}
+      </div>
+      % end
+    </div>
 
     <script src="/static/jquery.js"></script>
     <script src="/static/foundation.min.js"></script>
+
 
     <script>$(document).foundation();</script>
 

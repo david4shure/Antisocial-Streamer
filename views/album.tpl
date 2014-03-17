@@ -31,9 +31,51 @@
       </section>
     </nav>
 
-    % for song in songs:
-    {{ song[2] }} by {{ song[1] }} <br>
-    % end
+    <br>
+    <br>
+
+
+
+    <h4 class="subheader text-center">{{songs[0][1].title()}}</h4>
+    <div class="row" data-equalizer>
+      <div class="large-6 columns" data-equalizer-watch>
+	<fieldset>
+	  <legend> {{songs[0][3].title()}} </legend>
+	  
+	  <ul class="disc">
+	    % for song in songs:
+	    <li><strong><i><a href="/song/{{song[0]}}">{{song[2].title()}}</a></i></strong></li>
+	    % end
+	    
+	  </ul>
+	</fieldset>
+      </div>
+      <div class="large-6 columns" data-equalizer-watch>
+	<a class="th" href="/album/{{ album_id }}">
+	  <img src="/art/{{ album_id }}" style="width:500px;height:500px;" />
+	</a>
+      </div>
+    </div>
+
+
+
+
+    <!-- <div class="row"> -->
+      
+    <!-- <div class="large-12 columns"> -->
+    <!--   <ul class="pricing-table"> -->
+    <!-- 	<li class="title">{{songs[0][1].title()}}</li> -->
+    <!-- 	<li class="price">{{songs[0][3].title()}}</li> -->
+    <!-- 	% for song in songs: -->
+    <!-- 	<li class="bullet-item">{{song[2].title()}}</li> -->
+    <!-- 	% end  -->
+
+    <!-- 	<li class="text-center"></li> -->
+    <!-- 	<li class="cta-button"><a class="button" href="#">Play / Pause</a></li> -->
+    <!--   </ul> -->
+    <!-- </div> -->
+
+    <!-- </div> -->
 
   </body>
 </html>

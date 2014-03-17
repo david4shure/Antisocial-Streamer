@@ -13,14 +13,15 @@ CREATE TABLE Songs (
        release_year TEXT(5),
        file_path TEXT(200) NOT NULL,
        file_name TEXT(200) NOT NULL,
-       UNIQUE (artist_name, title, album_name),
+       hits integer DEFAULT 0,
+       UNIQUE(title, album_name, artist_name),
        FOREIGN KEY (artist_name) REFERENCES Artists (artist_name),
        FOREIGN KEY (album_name, release_year) REFERENCES Albums (album_name, release_year)
 );
 
 CREATE TABLE Artists (
        id integer PRIMARY KEY,
-       artist_name TEXT(100) UNIQUE NOT NULL
+       artist_name TEXT(100) NOT NULL UNIQUE
 );
 
 CREATE TABLE Albums (
@@ -31,6 +32,6 @@ CREATE TABLE Albums (
        cover_art_file_name TEXT(100),
        release_year TEXT(5),
        genre TEXT(50),
-       UNIQUE (album_name),
+       UNIQUE(album_name),
        FOREIGN KEY (artist_name) REFERENCES Artists (artist_name)
 );
