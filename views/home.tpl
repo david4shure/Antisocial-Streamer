@@ -46,24 +46,42 @@
     </nav>
 
     <div class="row">
-      <h4 class="subheader text-center">Recommendations</h4>
+      <h4 class="subheader text-center">Random Picks</h4>
     </div>
-
     <div class="panel">
       % for album_id in album_art_ids:
-      
-      <a class="th" href="/album/{{ album_id[0] }}">
-	<img src="/art/{{ album_id[0] }}" style="width:300px;height:300px;">
-      </a>
-      
+	<a class="th" href="/album/{{ album_id[0] }}">
+	  <img src="/art/{{ album_id[0] }}" style="width:297px;height:297px;">
+	</a>
       % end
-      <!-- <div class="row"> -->
-	
-      <!-- </div> -->
     </div>
 
-    
+    <div class="row">
+      <h4 class="subheader" style="margin-left:-5em;">Top Tracks</h4>
+    </div>
 
+    <table style="float:left;margin-left:3em;">
+      <thead>
+	<tr>
+	  <th>Title</th>
+	  <th>Album</th>
+	  <th>Artist</th>
+	  <th>Hits</th>
+	</tr>
+      </thead>
+      <tbody>
+	% for song in top_songs:
+	<tr>
+	  <td><a href="/song/{{song[4]}}">{{ song[0] }}</a></td>
+	  <td><a href="/album/{{song[5]}}">{{ song[1] }}</a></td>
+	  <td><i>{{ song[3] }}</i></td>
+	  <td>{{ song[2] }}</td>
+	</tr>
+	% end
+      </tbody>
+    </table>
+    
+    
     <script src="/static/jquery.js"></script>
     <script src="/static/foundation.min.js"></script>
 

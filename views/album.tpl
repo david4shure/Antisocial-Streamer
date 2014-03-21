@@ -26,6 +26,20 @@
 	
 	<!-- Left Nav Section -->
 	<ul class="left">
+	  <li class="has-form">
+
+	    <form action="/search" method="post">
+	      <div class="row collapse">
+		<div class="large-8 small-9 columns">
+		  <input type="text" placeholder="Find media" name="search_criteria">
+		</div>
+		<div class="large-4 small-3 columns">
+		  <button type="submit" class="alert button expand">Search</button>
+		</div>
+	      </div>
+	    </form>
+	    
+	  </li>
 
 	</ul>
       </section>

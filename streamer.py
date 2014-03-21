@@ -31,6 +31,8 @@ def serve_static(filename):
 
 @get('/song/<music_id>')
 def serve_music(music_id):
+    if request.get_cookie("email") is None:
+        redirect("/login")
     conn = sqlite3.connect("db/data.db")
     cursor = conn.cursor()
     cursor.execute("SELECT file_path, file_name FROM Songs WHERE id = ?", [music_id])
@@ -56,7 +58,7 @@ def art_files(album_id):
     cursor.execute("SELECT cover_art_file_path, cover_art_file_name FROM Albums WHERE id = ?", [album_id])
     results = cursor.fetchall()
     if results[0][0] is None:
-        return static_file("no_album_art.jpg", os.path.expanduser("~/Downloads"))
+        return static_file("no_album_art.jpg", os.path.expanduser("./"))
     file_name = results[0][1]
     file_path = results[0][0]
     return static_file(file_name, root=file_path)
@@ -130,10 +132,13 @@ def home():
         
     conn = sqlite3.connect("db/data.db")
     cursor = conn.cursor()
-    cursor.execute("SELECT DISTINCT id FROM Albums WHERE cover_art_file_path IS NOT NULL and cover_art_file_name IS NOT NULL ORDER BY RANDOM() LIMIT 6")
-    ids = cursor.fetchall()
+    cursor.execute("SELECT DISTINCT id, album_name FROM Albums WHERE cover_art_file_path IS NOT NULL and cover_art_file_name IS NOT NULL ORDER BY RANDOM() LIMIT 6")
+    random_albums = cursor.fetchall()
+    cursor = conn.cursor()
+    cursor.execute("SELECT songs.title, songs.album_name, songs.hits / 2, songs.artist_name, songs.id, albums.id FROM Songs INNER JOIN Albums ON Songs.album_name = Albums.album_name ORDER BY hits DESC LIMIT 10;")
+    top_songs = cursor.fetchall()
     conn.close()
-    return template("home", email=request.get_cookie("email"), album_art_ids=ids)
+    return template("home", email=request.get_cookie("email"), album_art_ids=random_albums, top_songs=top_songs)
 
 @post('/search')
 def search():
@@ -281,4 +286,4 @@ def populate_db(directory, extension):
 
 populate_db("~/Downloads", "*.mp3")
 
-run(host="0.0.0.0", port=8080, debug=True)
+run(host="0.0.0.0", port=80, debug=True, threaded=True)
