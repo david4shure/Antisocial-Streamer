@@ -2,7 +2,8 @@ CREATE TABLE Users (
        email varchar(40) PRIMARY KEY,
        password_hash varchar(100) NOT NULL,
        password_salt varchar(100) NOT NULL,
-       is_admin BOOLEAN
+       is_admin BOOLEAN,
+       is_confirmed BOOLEAN
 );
 
 CREATE TABLE Songs (
