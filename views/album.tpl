@@ -2,8 +2,6 @@
   <head>
     <title>Antisocial Streamer</title>
     <link href="/static/foundation.min.css" rel="stylesheet" type="text/css">
-    <script src="/static/foundation.min.js"></script>
-    <script src="/static/foundation.accordion.js"></script>
 
   </head>
   
@@ -20,8 +18,19 @@
       <section class="top-bar-section">
 	<!-- Right Nav Section -->
 	<ul class="right">
-	  <li><a href="#">{{ email }}</a></li>
+
 	  <li class="active"><a href="/logout">Logout</a></li>
+	  % if is_admin:
+	  <li class="has-dropdown">
+	    <a href="#">{{ email }}</a>
+	    <ul class="dropdown">
+	      <li><a href="/manage">Manage Users</a></li>
+	    </ul>
+	  </li>
+	  % else:
+	  <li><a href="#">{{ email }}</a></li>
+	  % end
+
 	</ul>
 	
 	<!-- Left Nav Section -->
@@ -90,6 +99,10 @@
     <!-- </div> -->
 
     <!-- </div> -->
+
+    <script src="/static/jquery.js"></script>
+    <script src="/static/foundation.min.js"></script>
+    <script>$(document).foundation();</script>
 
   </body>
 </html>

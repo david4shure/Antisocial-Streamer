@@ -19,9 +19,22 @@
       <section class="top-bar-section">
 	<!-- Right Nav Section -->
 	<ul class="right">
-	  
-	  <li><a href="#">{{ email }}</a></li>
+
 	  <li class="active"><a href="/logout">Logout</a></li>
+
+	  % if is_admin:
+	  <li class="has-dropdown">
+	    <a href="#">{{ email }}</a>
+	    <ul class="dropdown">
+	      <li><a href="/manage">Manage Users</a></li>
+	    </ul>
+	  </li>
+	  % else:
+	  <li><a href="#">{{ email }}</a></li>
+	  % end
+
+
+
 	</ul>
 	
 	<!-- Left Nav Section -->
@@ -57,7 +70,7 @@
     </div>
 
     <div class="row">
-      <h4 class="subheader" style="margin-left:-5em;">Top Tracks</h4>
+      <h4 class="subheader" style="margin-left:-2em;">Popular Tracks</h4>
     </div>
 
     <table style="float:left;margin-left:3em;">
@@ -72,9 +85,9 @@
       <tbody>
 	% for song in top_songs:
 	<tr>
-	  <td><a href="/song/{{song[4]}}">{{ song[0] }}</a></td>
-	  <td><a href="/album/{{song[5]}}">{{ song[1] }}</a></td>
-	  <td><i>{{ song[3] }}</i></td>
+	  <td><a href="/song/{{song[4]}}">{{ song[0].title() }}</a></td>
+	  <td><a href="/album/{{song[5]}}">{{ song[1].title() }}</a></td>
+	  <td><i>{{ song[3].title() }}</i></td>
 	  <td>{{ song[2] }}</td>
 	</tr>
 	% end

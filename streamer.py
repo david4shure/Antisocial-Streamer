@@ -10,6 +10,10 @@ with open("keys", "r") as keys:
 def error404(error):
     return template("404")
 
+@error(403)
+def error403(error):
+    return template("403", email=request.get_cookie("email"))
+
 @get('/')
 def index():
     redirect("/login")
@@ -29,12 +33,77 @@ def login_error(error):
 def serve_static(filename):
     return static_file(filename, root="./static")
 
+@get('/woah')
+def woah():
+    if request.get_cookie("email") is None:
+        redirect("/login")
+    return template("woah", email=request.get_cookie("email"))
+
+@get('/manage')
+def manage():
+    if request.get_cookie("email") is None:
+        redirect("/login")
+
+    if not check_admin(request.get_cookie("email")):
+        return error403(None)
+    else:
+        conn = sqlite3.connect("db/data.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT email FROM Users WHERE is_confirmed = 0")
+        
+        unconfirmed_users = cursor.fetchall()
+
+        cursor.execute("SELECT email FROM Users WHERE is_admin = 0 AND is_confirmed = 1 AND NOT email = ?", [request.get_cookie("email")])
+        
+        confirmed_users = cursor.fetchall()
+
+        return template("manage", email=request.get_cookie("email"), unconfirmed_users = unconfirmed_users, confirmed_users = confirmed_users)
+
+@post('/bestow')
+def bestow_admin_status():
+    email = request.forms.get("make_admin")
+    conn = sqlite3.connect("db/data.db")
+    cursor = conn.cursor()
+    cursor.execute("UPDATE Users SET is_admin = 1 WHERE email = ?", [email])
+    conn.commit()
+    conn.close()
+    redirect("/manage")
+
+@post('/exile')
+def exile_user():
+    email = request.forms.get("exile_user")
+    conn = sqlite3.connect("db/data.db")
+    cursor = conn.cursor()
+    cursor.execute("UPDATE Users SET is_confirmed = 0 WHERE email = ?", [email])
+    conn.commit()
+    conn.close()
+    redirect("/manage")
+
+
+@post('/confirm')
+def confirm_user():
+    email = request.forms.get("confirm_user")
+    conn = sqlite3.connect("db/data.db")
+    cursor = conn.cursor()
+    cursor.execute("UPDATE Users SET is_confirmed = 1 WHERE email = ?", [email])
+    conn.commit()
+    conn.close()
+    redirect("/manage")
+
 @get('/song/<music_id>')
 def serve_music(music_id):
     if request.get_cookie("email") is None:
         redirect("/login")
     conn = sqlite3.connect("db/data.db")
     cursor = conn.cursor()
+
+    cursor.execute("SELECT is_confirmed FROM Users WHERE email = ?", [request.get_cookie("email")])
+
+    can_listen = cursor.fetchone()[0]
+
+    if can_listen == 0:
+        redirect("/woah")
+    
     cursor.execute("SELECT file_path, file_name FROM Songs WHERE id = ?", [music_id])
     result = cursor.fetchone()
     if result is None:
@@ -75,7 +144,10 @@ def album(album_id):
     album_name = cursor.fetchone()[0]
     cursor.execute("SELECT * FROM Songs WHERE album_name = ?", [album_name])
     results = cursor.fetchall()
-    return template("album", songs=results, email=request.get_cookie("email"), album_id = album_id)
+
+    
+    
+    return template("album", songs=results, email=request.get_cookie("email"), album_id = album_id, is_admin = check_admin(request.get_cookie("email")))
 
 @post('/auth')
 def authenticate():
@@ -139,7 +211,7 @@ def home():
     cursor.execute("SELECT songs.title, songs.album_name, songs.hits / 2, songs.artist_name, songs.id, albums.id FROM Songs INNER JOIN Albums ON Songs.album_name = Albums.album_name ORDER BY hits DESC LIMIT 10;")
     top_songs = cursor.fetchall()
     conn.close()
-    return template("home", email=request.get_cookie("email"), album_art_ids=random_albums, top_songs=top_songs)
+    return template("home", email=request.get_cookie("email"), album_art_ids=random_albums, top_songs=top_songs, is_admin=check_admin(request.get_cookie("email")))
 
 @post('/search')
 def search():
@@ -156,7 +228,7 @@ def search():
     cursor.execute("SELECT * FROM Artists WHERE artist_name LIKE '%" + request.forms.get("search_criteria").lower() + "%'")
     artist_results = cursor.fetchall()
     conn.close()
-    return template("search", songs = song_results, artists = artist_results, albums = album_results, email = request.get_cookie("email"))
+    return template("search", songs = song_results, artists = artist_results, albums = album_results, email = request.get_cookie("email"), is_admin = check_admin(request.get_cookie("email")))
 
 def authenticate_user(email, raw_password):
     global master_secret_key
@@ -186,9 +258,26 @@ def create_user(email, raw_password, is_admin):
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(raw_password + salt + master_secret_key, salt)
     
-    cursor.execute("INSERT INTO Users (email, password_hash, password_salt, is_admin) VALUES (?, ?, ? , ?)", (email, hashed_password, salt, is_admin))
+    cursor.execute("INSERT INTO Users (email, password_hash, password_salt, is_admin, is_confirmed) VALUES (?, ?, ?, ?, 0)", (email, hashed_password, salt, is_admin))
     conn.commit()
     conn.close()
+
+def check_admin(email):
+    conn = sqlite3.connect("db/data.db")
+    cursor = conn.cursor()
+
+    if email is None:
+        return False
     
+    cursor.execute("SELECT is_admin FROM Users WHERE email = ?", [email])
+
+    is_admin = cursor.fetchone()[0]
+
+    conn.close()
+
+    if is_admin == 0:
+        return False
+    if is_admin == 1:
+        return True
 
 run(host="0.0.0.0", port=80, debug=True, threaded=True)

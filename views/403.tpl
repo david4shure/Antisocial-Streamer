@@ -2,6 +2,8 @@
   <head>
     <title>Antisocial Streamer</title>
     <link href="/static/foundation.min.css" rel="stylesheet" type="text/css">
+    <!-- <script type="text/javascript" src="/static/foundation.min.js"></scirpt> -->
+    <!-- <script type="text/javascript" src="/static/foundation.orbit.js"></script> -->
   </head>
   
   <body>
@@ -17,18 +19,10 @@
       <section class="top-bar-section">
 	<!-- Right Nav Section -->
 	<ul class="right">
-	  
+
 	  <li class="active"><a href="/logout">Logout</a></li>
-	  % if is_admin:
-	  <li class="has-dropdown">
-	    <a href="#">{{ email }}</a>
-	    <ul class="dropdown">
-	      <li><a href="/manage">Manage Users</a></li>
-	    </ul>
-	  </li>
-	  % else:
+
 	  <li><a href="#">{{ email }}</a></li>
-	  % end
 
 	</ul>
 	
@@ -53,39 +47,37 @@
       </section>
     </nav>
 
-    <h4 class="subheader text-center">Search Results</h4>
-
-
-    <div class="panel">
-      % for song in songs:
+        <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    
+    <div class="small-4 columns">
       <div class="row">
-	<div class="large-6 small-3 columns">
-	  <a href="/song/{{ song[0] }}">{{ song[2] }}</a> by {{ song[1] }} on {{ song[3] }}
-	</div>
+	<br>
       </div>
-      % end
     </div>
 
-    <div class="panel">
-      % for album in albums:
-      <div class="row">
-	<a href="/album/{{album[0]}}">{{ album[1] }}</a>
+    <div class="small-4 columns text-center">
+      <div class="panel">
+      <h4 class="subheader text-center">You're not supposed to be here.</h4>
+      <br>
+      <h3 class="text-center"><small>Turn around, and walk away slowly.<small></h3>
       </div>
-      % end
     </div>
 
-
-    <div class="panel">
-      % for artist in artists:
+    <div class="small-4 columns">
       <div class="row">
-	{{ artist[1] }}
+	<br>
       </div>
-      % end
     </div>
-
+    
+    
     <script src="/static/jquery.js"></script>
     <script src="/static/foundation.min.js"></script>
-
 
     <script>$(document).foundation();</script>
 
