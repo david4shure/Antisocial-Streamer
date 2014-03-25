@@ -1,5 +1,7 @@
 import bcrypt, json, sqlite3, os, fnmatch, eyeD3
 from bottle import *
+from gevent import monkey; monkey.patch_all()
+
 
 master_secret_key = ""
 
@@ -280,4 +282,4 @@ def check_admin(email):
     if is_admin == 1:
         return True
 
-run(host="0.0.0.0", port=80, debug=True, threaded=True)
+run(host="0.0.0.0", port=80, debug=True, server="gevent")

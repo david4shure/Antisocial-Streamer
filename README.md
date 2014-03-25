@@ -12,5 +12,5 @@ Installation / Requirements
 Make sure you have python-sqlite3, python-eyeD3, python-bcrypt installed.
   To install run 
 ```shell
-    sudo apt-get install python-sqlite python-eyeD3 python-bcrypt
+    sudo apt-get install python-sqlite python-eyeD3 python-bcrypt python-gevent
 ```
