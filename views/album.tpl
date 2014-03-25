@@ -99,7 +99,7 @@
 	<br>
 	<br>
 
-	<audio controls id="audio_player" style="margin-left: 4.85em;">
+	<audio controls id="audio_player" style="margin-left: 5.9em;">
 	  <source src="/song/{{songs[0][0]}}" type="audio/mpeg" id="audio_source">
 	</audio>
 	
