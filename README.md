@@ -12,7 +12,7 @@ Requirements
 Make sure you have python-sqlite3, python-eyeD3, python-bcrypt, python-gevent installed.
   To install run 
 ```shell
-    sudo apt-get install python-sqlite python-eyeD3 python-bcrypt python-gevent
+sudo apt-get install python-sqlite python-eyeD3 python-bcrypt python-gevent
 ```
 
 Running the application
