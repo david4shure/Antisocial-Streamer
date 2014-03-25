@@ -9,7 +9,7 @@ An invite only web application for your MP3 music library with rendered album ar
 Requirements
 ============
 
-Make sure you have python-sqlite3, python-eyeD3, python-bcrypt installed.
+Make sure you have python-sqlite3, python-eyeD3, python-bcrypt, python-gevent installed.
   To install run 
 ```shell
     sudo apt-get install python-sqlite python-eyeD3 python-bcrypt python-gevent
