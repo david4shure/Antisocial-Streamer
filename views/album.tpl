@@ -102,6 +102,15 @@
 	<audio controls id="audio_player" style="margin-left: 5.9em;">
 	  <source src="/song/{{songs[0][0]}}" type="audio/mpeg" id="audio_source">
 	</audio>
+
+	<br>
+	<br>
+
+	% if not is_confirmed:
+	<div data-alert class="alert-box alert round">
+	  Only confirmed users can enjoy the music. Get confirmed and try again.
+	</div>
+	% end
 	
       </div>
 

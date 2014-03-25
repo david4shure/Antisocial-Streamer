@@ -1,4 +1,4 @@
-import bcrypt, json, sqlite3, os, fnmatch, eyeD3
+import bcrypt, json, sqlite3, os, fnmatch, eyeD3, re
 from bottle import *
 from gevent import monkey; monkey.patch_all()
 
@@ -146,10 +146,8 @@ def album(album_id):
     album_name = cursor.fetchone()[0]
     cursor.execute("SELECT * FROM Songs WHERE album_name = ?", [album_name])
     results = cursor.fetchall()
-
     
-    
-    return template("album", songs=results, email=request.get_cookie("email"), album_id = album_id, is_admin = check_admin(request.get_cookie("email")))
+    return template("album", songs=results, email=request.get_cookie("email"), album_id = album_id, is_admin = check_admin(request.get_cookie("email")), is_confirmed = check_confirmed(request.get_cookie("email")))
 
 @post('/auth')
 def authenticate():
@@ -201,7 +199,6 @@ def signup_user():
 
 @get('/home')
 def home():
-
     if request.get_cookie("email") is None:
         redirect("/login")
         
@@ -217,17 +214,16 @@ def home():
 
 @post('/search')
 def search():
-
     if request.get_cookie("email") is None:
         redirect("/login")
 
     conn = sqlite3.connect("db/data.db")
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM Songs WHERE title LIKE '%" + request.forms.get("search_criteria").lower() + "%'")
+    cursor.execute("SELECT * FROM Songs WHERE title LIKE '%" + " ".join(re.findall(r'\w+', request.forms.get("search_criteria").lower())) + "%'")
     song_results = cursor.fetchall()
-    cursor.execute("SELECT * FROM Albums WHERE album_name LIKE '%" + request.forms.get("search_criteria").lower() + "%'")
+    cursor.execute("SELECT * FROM Albums WHERE album_name LIKE '%" + " ".join(re.findall(r'\w+', request.forms.get("search_criteria").lower())) + "%'")
     album_results = cursor.fetchall()
-    cursor.execute("SELECT * FROM Artists WHERE artist_name LIKE '%" + request.forms.get("search_criteria").lower() + "%'")
+    cursor.execute("SELECT * FROM Artists WHERE artist_name LIKE '%" + " ".join(re.findall(r'\w+', request.forms.get("search_criteria").lower())) + "%'")
     artist_results = cursor.fetchall()
     conn.close()
     return template("search", songs = song_results, artists = artist_results, albums = album_results, email = request.get_cookie("email"), is_admin = check_admin(request.get_cookie("email")))
@@ -273,13 +269,35 @@ def check_admin(email):
     
     cursor.execute("SELECT is_admin FROM Users WHERE email = ?", [email])
 
-    is_admin = cursor.fetchone()[0]
+    result = cursor.fetchone()
+    
+    if result[0] is not None:
+        is_admin = result[0]
+    else:
+        return False
 
     conn.close()
 
-    if is_admin == 0:
+    return is_admin == 1
+
+def check_confirmed(email):
+    conn = sqlite3.connect("db/data.db")
+    cursor = conn.cursor()
+
+    if email is None:
         return False
-    if is_admin == 1:
-        return True
+    
+    cursor.execute("SELECT is_confirmed FROM Users WHERE email = ?", [email])
+
+    result = cursor.fetchone()
+
+    if result[0] is not None:
+        is_confirmed = result[0]
+    else:
+        return False
+
+    conn.close()
+
+    return is_confirmed == 1
 
 run(host="0.0.0.0", port=80, debug=True, server="gevent")
