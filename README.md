@@ -24,3 +24,10 @@ sudo python streamer.py
 ```
 
 And enjoy your MP3 library in all of its glory from anywhere!
+
+
+Upcoming
+========
+
+1. Admin users can edit metadata on albums, songs artists if incorrect or inaccurate
+2. Eventual support for FLAC, OGG and M4A files
