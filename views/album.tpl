@@ -73,9 +73,14 @@
 
 
     <h4 class="subheader text-center">{{songs[0][1].title()}}</h4>
+
+
+
     <div class="row" data-equalizer>
       <div class="large-6 columns" data-equalizer-watch>
 	<fieldset>
+
+
 	  <legend> {{songs[0][3].title()}} </legend>
 	  
 	  <ul class="disc">
@@ -84,17 +89,25 @@
 	    % end
 	  </ul>
 
-	  <audio controls id="audio_player">
-	    <source src="/song/{{songs[0][0]}}" type="audio/mpeg" id="audio_source">
-	  </audio>
 	</fieldset>
       </div>
       <div class="large-6 columns" data-equalizer-watch>
-	<a class="th" href="/album/{{ album_id }}">
+	<a class="th" href="">
 	  <img src="/art/{{ album_id }}" style="width:500px;height:500px;" />
 	</a>
+
+	<br>
+	<br>
+
+	<audio controls id="audio_player" style="margin-left: 4.85em;">
+	  <source src="/song/{{songs[0][0]}}" type="audio/mpeg" id="audio_source">
+	</audio>
+	
       </div>
+
+
     </div>
+
 
     <script src="/static/jquery.js"></script>
     <script src="/static/foundation.min.js"></script>
