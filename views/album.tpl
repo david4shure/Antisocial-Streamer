@@ -6,6 +6,19 @@
   </head>
   
   <body>
+    <script language="javascript">
+      function playSong(song_url) {
+          var player = document.getElementById("audio_player");
+          var source = document.getElementById("audio_source");
+
+          player.pause();
+          source.src = song_url;
+          source.currentTime = 0;
+
+          player.load();
+          player.play()
+      }
+    </script>
 
     <nav class="top-bar" data-topbar>
       <ul class="title-area">
@@ -67,10 +80,13 @@
 	  
 	  <ul class="disc">
 	    % for song in songs:
-	    <li><strong><i><a href="/song/{{song[0]}}">{{song[2].title()}}</a></i></strong></li>
+	    <li><strong><i><a OnClick="playSong('/song/{{ song[0] }}')">{{song[2].title()}}</a></i></strong></li>
 	    % end
-	    
 	  </ul>
+
+	  <audio controls id="audio_player">
+	    <source src="/song/{{songs[0][0]}}" type="audio/mpeg" id="audio_source">
+	  </audio>
 	</fieldset>
       </div>
       <div class="large-6 columns" data-equalizer-watch>
@@ -79,26 +95,6 @@
 	</a>
       </div>
     </div>
-
-
-
-
-    <!-- <div class="row"> -->
-      
-    <!-- <div class="large-12 columns"> -->
-    <!--   <ul class="pricing-table"> -->
-    <!-- 	<li class="title">{{songs[0][1].title()}}</li> -->
-    <!-- 	<li class="price">{{songs[0][3].title()}}</li> -->
-    <!-- 	% for song in songs: -->
-    <!-- 	<li class="bullet-item">{{song[2].title()}}</li> -->
-    <!-- 	% end  -->
-
-    <!-- 	<li class="text-center"></li> -->
-    <!-- 	<li class="cta-button"><a class="button" href="#">Play / Pause</a></li> -->
-    <!--   </ul> -->
-    <!-- </div> -->
-
-    <!-- </div> -->
 
     <script src="/static/jquery.js"></script>
     <script src="/static/foundation.min.js"></script>
