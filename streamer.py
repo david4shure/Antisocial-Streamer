@@ -209,8 +209,11 @@ def home():
     cursor = conn.cursor()
     cursor.execute("SELECT songs.title, songs.album_name, songs.hits / 2, songs.artist_name, songs.id, albums.id FROM Songs INNER JOIN Albums ON Songs.album_name = Albums.album_name ORDER BY hits DESC LIMIT 10;")
     top_songs = cursor.fetchall()
+    cursor.execute("SELECT album_name, artist_name, id FROM Albums ORDER BY id DESC LIMIT 10")
+    recent_albums = cursor.fetchall()
+
     conn.close()
-    return template("home", email=request.get_cookie("email"), album_art_ids=random_albums, top_songs=top_songs, is_admin=check_admin(request.get_cookie("email")))
+    return template("home", email=request.get_cookie("email"), album_art_ids=random_albums, top_songs=top_songs, recent_albums = recent_albums, is_admin=check_admin(request.get_cookie("email")))
 
 @post('/search')
 def search():

@@ -69,6 +69,8 @@
       % end
     </div>
 
+    <div class="panel radius">
+
     <div class="row">
       <h4 class="subheader" style="margin-left:-5em;">Popular Tracks</h4>
     </div>
@@ -93,7 +95,32 @@
 	% end
       </tbody>
     </table>
+
+
+    <h4 class="subheader" style="margin-top:-1.6em; margin-left: 56em;">Recently added albums</h4>
+
+    <table style="float:right; margin-top:-.3em; margin-right:16em;">
+      <thead>
+	<tr>
+	  <th>Album</th>
+	  <th>Artist</th>
+	</tr>
+      </thead>
+      <tbody>
+	% for album in recent_albums:
+	<tr>
+	  <td><a href="/album/{{album[2]}}">{{ album[0].title() }}</a></td>
+	  <td>{{ album[1].title() }}</td>
+	</tr>
+	% end
+      </tbody>
+    </table>
     
+
+    <br>    <br>    <br>    <br>    <br>    <br>    <br>    <br>    <br>    <br>
+    <br>    <br>    <br>    <br>    <br>    <br>    <br>    <br>    <br>    <br>
+    <br>    <br>    <br>    <br>    <br>    <br>
+    </div>
     
     <script src="/static/jquery.js"></script>
     <script src="/static/foundation.min.js"></script>
