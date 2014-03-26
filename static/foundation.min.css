@@ -11,3 +11,8 @@ meta.foundation-version{font-family:"/5.1.0/"}meta.foundation-mq-small{font-fami
     padding-bottom: 0.35rem;
     font-size: 0.75rem;
 }
+
+
+.active a {
+    font-weight: bold;
+}

@@ -6,19 +6,6 @@
   </head>
   
   <body>
-    <script language="javascript">
-      function playSong(song_url) {
-          var player = document.getElementById("audio_player");
-          var source = document.getElementById("audio_source");
-
-          player.pause();
-          source.src = song_url;
-          source.currentTime = 0;
-
-          player.load();
-          player.play()
-      }
-    </script>
 
     <nav class="top-bar" data-topbar>
       <ul class="title-area">
@@ -83,9 +70,9 @@
 
 	  <legend> {{songs[0][3].title()}} </legend>
 	  
-	  <ul class="disc">
+	  <ul id="playlist" class="disc">
 	    % for song in songs:
-	    <li><strong><i><a OnClick="playSong('/song/{{ song[0] }}')">{{song[2].title()}}</a></i></strong></li>
+	    <li><a href="/song/{{song[0]}}">{{song[2].title()}}</a></li>
 	    % end
 	  </ul>
 
@@ -99,8 +86,8 @@
 	<br>
 	<br>
 
-	<audio controls id="audio_player" style="margin-left: 5.9em;">
-	  <source src="/song/{{songs[0][0]}}" type="audio/mpeg" id="audio_source">
+	<audio controls id="audio_player" style="margin-left: 5.9em;" preload="auto" controls="" tabindex="0">
+
 	</audio>
 
 	<br>
@@ -121,6 +108,55 @@
     <script src="/static/jquery.js"></script>
     <script src="/static/foundation.min.js"></script>
     <script>$(document).foundation();</script>
+
+    <script language="javascript">
+
+    var audio;
+    var playlist;
+    var tracks;
+    var current;
+
+    init();
+
+    function init(){
+        current = 0;
+        audio = $('#audio_player');
+        audio[0].play();
+        playlist = $('#playlist');
+
+        tracks = playlist.find('li a');
+        len = tracks.length - 1;
+
+        playlist.find('a').click(function(e){
+            e.preventDefault();
+            link = $(this);
+            current = link.parent().index();
+            run(link, audio[0]);
+        });
+
+        audio[0].addEventListener('ended',function(e){
+            current++;
+            if(current == len){
+                current = 0;
+                link = playlist.find('a')[0];
+            }else{
+                link = playlist.find('a')[current];    
+            }
+
+            run($(link),audio[0]);
+        });
+    }
+
+    function run(link, player){
+        player.src = link.attr('href');
+        par = link.parent();
+	par.addClass('active').siblings().removeClass('active');
+	audio[0].load();
+	audio[0].play();
+    }
+
+    </script>
+
 
   </body>
 </html>
