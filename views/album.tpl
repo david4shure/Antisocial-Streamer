@@ -6,7 +6,7 @@
   </head>
   
   <body>
-
+    <div class="fixed">
     <nav class="top-bar" data-topbar>
       <ul class="title-area">
 	<li class="name">
@@ -53,6 +53,7 @@
 	</ul>
       </section>
     </nav>
+    </div>
 
     <br>
     <br>

@@ -5,7 +5,7 @@
   </head>
   
   <body>
-
+    <div class="fixed">
     <nav class="top-bar" data-topbar>
 
       <ul class="title-area">
@@ -44,6 +44,7 @@
 	</ul>
       </section>
     </nav>
+    </div>
 
     % if len(unconfirmed_users) > 0:
     <div class="small-4 columns">

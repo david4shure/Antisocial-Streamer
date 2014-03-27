@@ -7,7 +7,7 @@
   </head>
   
   <body>
-
+    <div class="fixed">
     <nav class="top-bar" data-topbar>
 
       <ul class="title-area">
@@ -57,25 +57,26 @@
 	</ul>
       </section>
     </nav>
+    </div>
 
     <div class="row">
       <h4 class="subheader text-center">Random Picks</h4>
     </div>
     <div class="panel">
+      % i = 0
       % for album_id in album_art_ids:
-	<a class="th" href="/album/{{ album_id[0] }}">
-	  <img src="/art/{{ album_id[0] }}" style="width:297px;height:297px;">
+	<a class="th" href="/album/{{ album_id[0] }}" style="display: inline-block; width: 16%" id="picture_{{i}}">
+	  <img src="/art/{{ album_id[0] }}">
 	</a>
+	% i += 1
       % end
     </div>
 
-    <div class="panel radius">
 
-    <div class="row">
-      <h4 class="subheader" style="margin-left:-5em;">Popular Tracks</h4>
-    </div>
-
-    <table style="float:left;margin-left:3em;">
+<div class="row">
+  <div class="large-7 columns">
+    <legend style="margin-left:17em;margin-bottom:1em;">Top songs</legend>
+    <table style="float:left;">
       <thead>
 	<tr>
 	  <th>Title</th>
@@ -95,11 +96,12 @@
 	% end
       </tbody>
     </table>
+  </div>
 
 
-    <h4 class="subheader" style="margin-top:-1.6em; margin-left: 56em;">Recently added albums</h4>
-
-    <table style="float:right; margin-top:-.3em; margin-right:16em;">
+  <div class="large-5 columns">
+    <legend style="margin-left:7.5em;margin-bottom:1em;">New additions</legend>
+    <table style="float:right;">
       <thead>
 	<tr>
 	  <th>Album</th>
@@ -115,17 +117,24 @@
 	% end
       </tbody>
     </table>
-    
+</div>
+  </div>
 
-    <br>    <br>    <br>    <br>    <br>    <br>    <br>    <br>    <br>    <br>
-    <br>    <br>    <br>    <br>    <br>    <br>    <br>    <br>    <br>    <br>
-    <br>    <br>    <br>    <br>    <br>    <br>
-    </div>
-    
     <script src="/static/jquery.js"></script>
     <script src="/static/foundation.min.js"></script>
 
+    <script>
+
+      for(var i = 0; i < 6; i++) {
+	var picture = document.getElementById("picture_" + i);
+	picture.clientHeight = picture.clientWidth;
+	picture.style = "width: " + picture.clientWidth + "; height: " + picture.clientWidth + ";";
+
+      }
+    </script>
+
     <script>$(document).foundation();</script>
+    
 
 
   </body>

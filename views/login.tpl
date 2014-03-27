@@ -5,7 +5,7 @@
   </head>
   
   <body>
-
+    <div class="fixed">
     <nav class="top-bar" data-topbar>
       <ul class="title-area">
 	<li class="name">
@@ -26,7 +26,7 @@
 	</ul>
       </section>
     </nav>
-
+    </div>
     
     <div class="text-center">
       <div class="show-for-large-up" style="height:100px"></div>

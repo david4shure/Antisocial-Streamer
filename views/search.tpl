@@ -5,7 +5,7 @@
   </head>
   
   <body>
-
+    <div class="fixed">
     <nav class="top-bar" data-topbar>
 
       <ul class="title-area">
@@ -52,36 +52,47 @@
 	</ul>
       </section>
     </nav>
+    </div>
 
     <h4 class="subheader text-center">Search Results</h4>
 
 
-    <div class="panel">
+    <fieldset>
+      <legend>Songs</legend>
+      % if len(songs) == 0:
+      <h6>There are no matching songs</h6>
+      % end
       % for song in songs:
       <div class="row">
-	<div class="large-6 small-3 columns">
-	  <a href="/song/{{ song[0] }}">{{ song[2] }}</a> by {{ song[1] }} on {{ song[3] }}
-	</div>
+	  <a href="/song/{{ song[0] }}">{{ song[2].title() }}</a> by {{ song[1].title() }} on {{ song[3].title() }}
       </div>
       % end
-    </div>
+    </fieldset>
 
-    <div class="panel">
+    <fieldset>
+      <legend>Albums</legend>
+      % if len(albums) == 0:
+      <h6>There are no matching albums</h6>
+      % end
       % for album in albums:
       <div class="row">
-	<a href="/album/{{album[0]}}">{{ album[1] }}</a>
+	<a href="/album/{{album[0]}}">{{ album[1].title() }}</a>
       </div>
       % end
-    </div>
+    </fieldset>
 
 
-    <div class="panel">
+    <fieldset>
+      <legend>Artists</legend>
+      % if len(artists) == 0:
+      <h6>There are no matching artists</h6>
+      % end
       % for artist in artists:
       <div class="row">
-	{{ artist[1] }}
+	{{ artist[1].title() }}
       </div>
       % end
-    </div>
+    </fieldset>
 
     <script src="/static/jquery.js"></script>
     <script src="/static/foundation.min.js"></script>
