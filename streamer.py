@@ -204,6 +204,9 @@ def signup_user():
 def home():
     if request.get_cookie("email") is None:
         redirect("/login")
+
+    if not check_user_exists(request.get_cookie("email")):
+        redirect("/logout")
         
     conn = sqlite3.connect("db/data.db")
     cursor = conn.cursor()
@@ -216,6 +219,8 @@ def home():
     recent_albums = cursor.fetchall()
 
     conn.close()
+
+    
     return template("home", email=request.get_cookie("email"), album_art_ids=random_albums, top_songs=top_songs, recent_albums = recent_albums, is_admin=check_admin(request.get_cookie("email")))
 
 @post('/search')
@@ -290,7 +295,7 @@ def check_admin(email):
 
     result = cursor.fetchone()
     
-    if result[0] is not None:
+    if result is not None and result[0] is not None:
         is_admin = result[0]
     else:
         return False
@@ -310,7 +315,7 @@ def check_confirmed(email):
 
     result = cursor.fetchone()
 
-    if result[0] is not None:
+    if result is not None and result[0] is not None:
         is_confirmed = result[0]
     else:
         return False
@@ -318,5 +323,18 @@ def check_confirmed(email):
     conn.close()
 
     return is_confirmed == 1
+
+def check_user_exists(email):
+    if email is None:
+        return False
+
+    conn = sqlite3.connect("db/data.db")
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM Users WHERE email = ?", [email])
+    result = cursor.fetchone()
+    conn.close()
+    
+    return result is not None
 
 run(host="0.0.0.0", port=8080, debug=True, server="gevent")
