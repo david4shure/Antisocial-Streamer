@@ -6,6 +6,21 @@
   </head>
   
   <body>
+
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-49489019-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
+
     <div class="fixed">
     <nav class="top-bar" data-topbar>
       <ul class="title-area">
@@ -62,12 +77,9 @@
 
     <h4 class="subheader text-center">{{songs[0][1].title()}}</h4>
 
-
-
     <div class="row" data-equalizer>
       <div class="large-6 columns" data-equalizer-watch>
 	<fieldset>
-
 
 	  <legend> {{songs[0][3].title()}} </legend>
 	  
@@ -81,7 +93,7 @@
       </div>
       <div class="large-6 columns" data-equalizer-watch>
 	<a class="th" href="">
-	  <img src="/art/{{ album_id }}" style="width:500px;height:500px;" />
+	  <img src="/art/{{ album_id }}" style="width:500px;" />
 	</a>
 
 	<br>

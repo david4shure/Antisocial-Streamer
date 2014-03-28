@@ -7,6 +7,21 @@
   </head>
   
   <body>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-49489019-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+  
+    </script>
+
     <div class="fixed">
     <nav class="top-bar" data-topbar>
 
@@ -58,25 +73,27 @@
       </section>
     </nav>
     </div>
-
+    
     <div class="row">
       <h4 class="subheader text-center">Random Picks</h4>
     </div>
-    <div class="panel">
+    <div class="panel clearfix">
       % i = 0
       % for album_id in album_art_ids:
-	<a class="th" href="/album/{{ album_id[0] }}" style="display: inline-block; width: 16%" id="picture_{{i}}">
-	  <img src="/art/{{ album_id[0] }}">
+	<a href="/album/{{ album_id[0] }}" >
+	  <img src="/art/{{ album_id[0] }}" width="16.3%" href="/album/{{ album_id[0] }}" style="padding: 5px; min-width: 150px;" id="picture_{{i}}">
 	</a>
 	% i += 1
       % end
     </div>
 
+    <div class="small-1 columns">
+      <br>
+    </div>
 
-<div class="row">
-  <div class="large-7 columns">
-    <legend style="margin-left:17em;margin-bottom:1em;">Top songs</legend>
-    <table style="float:left;">
+  <div class="large-6 columns" style="margin-left: 2em;">
+    <legend style="margin-bottom:1em;">Top songs</legend>
+    <table>
       <thead>
 	<tr>
 	  <th>Title</th>
@@ -98,10 +115,9 @@
     </table>
   </div>
 
-
-  <div class="large-5 columns">
-    <legend style="margin-left:7.5em;margin-bottom:1em;">New additions</legend>
-    <table style="float:right;">
+  <div class="small-4 columns" style="margin-right: -5em;">
+    <legend style="margin-bottom:1em;">New additions</legend>
+    <table>
       <thead>
 	<tr>
 	  <th>Album</th>
@@ -117,7 +133,6 @@
 	% end
       </tbody>
     </table>
-</div>
   </div>
 
     <script src="/static/jquery.js"></script>
@@ -127,10 +142,16 @@
 
       for(var i = 0; i < 6; i++) {
 	var picture = document.getElementById("picture_" + i);
-	picture.clientHeight = picture.clientWidth;
-	picture.style = "width: " + picture.clientWidth + "; height: " + picture.clientWidth + ";";
-
+	picture.style.height = picture.clientWidth;
       }
+
+      window.onresize=function() {
+	for(var i = 0; i < 6; i++) {
+	    var picture = document.getElementById("picture_" + i);
+	    picture.style.height = picture.clientWidth;
+        }
+      };
+
     </script>
 
     <script>$(document).foundation();</script>
