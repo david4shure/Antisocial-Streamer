@@ -319,4 +319,4 @@ def check_confirmed(email):
 
     return is_confirmed == 1
 
-run(host="0.0.0.0", port=80, debug=True, server="gevent")
+run(host="0.0.0.0", port=8080, debug=True, server="gevent")
