@@ -92,7 +92,7 @@
     </div>
 
   <div class="large-6 columns" style="margin-left: 2em;">
-    <legend style="margin-bottom:1em;">Top songs</legend>
+    <h4 class="subheader" style="margin-bottom:1em;">Top songs</h4>
     <table>
       <thead>
 	<tr>
@@ -116,7 +116,7 @@
   </div>
 
   <div class="small-4 columns" style="margin-right: -5em;">
-    <legend style="margin-bottom:1em;">New additions</legend>
+    <h4 class="subheader" style="margin-bottom:1em;">New additions</h4>
     <table>
       <thead>
 	<tr>
