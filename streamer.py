@@ -2,6 +2,7 @@ import bcrypt, json, sqlite3, os, fnmatch, eyeD3, re
 from bottle import *
 from gevent import monkey; monkey.patch_all()
 
+# David Shure
 
 master_secret_key = ""
 
