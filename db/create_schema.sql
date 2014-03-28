@@ -36,3 +36,9 @@ CREATE TABLE Albums (
        UNIQUE(album_name),
        FOREIGN KEY (artist_name) REFERENCES Artists (artist_name)
 );
+
+CREATE TABLE Suggestions (
+       id integer PRIMARY KEY,
+       content TEXT(500) NOT NULL,
+       user_email varchar(100) NOT NULL
+);
