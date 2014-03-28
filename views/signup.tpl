@@ -58,13 +58,18 @@
               <button type="submit" class="small button">Signup</button>
 	      % if error == "dup":
 	      <div data-alert class="alert-box alert">
-                A user already exists with this email
+                A user already exists with this email.
               </div>
 	      % end
 	      % if error == "mismatch":
 	      <div data-alert class="alert-box alert">
                 Passwords don't match.
               </div>
+	      % end
+	      % if error == "invalid":
+	      <div data-alert class="alert-box alert">
+		Please enter a valid email.
+	      </div>
 	      % end
             </fieldset>
           </div>

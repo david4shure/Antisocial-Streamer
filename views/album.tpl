@@ -65,6 +65,29 @@
 	    
 	  </li>
 
+	  <li>
+	    <a href="#" class="button success" data-reveal-id="suggestions-modal" data-reveal>Suggest music</a>
+	  </li>
+
+	  <div id="suggestions-modal" class="reveal-modal small text-center" data-reveal>
+	    <h3 class="subheader text-center">Want more music?</h3>
+
+	    <form action="/suggest" method="post">
+	      <br>
+	      <p class="text-center">Make a request for the music you like. Include the artist and the album you want (or just all the music by a certain artist).</p>
+	      <textarea name="content" placeholder="e.g. I want the album Babel by Mumford & Sons" style="margin-left: auto; max-width: 700px" ></textarea>
+
+
+	      <button type="submit" class="button" style="margin: 0 auto;">Suggest</button>
+
+	    </form>
+
+
+
+	    <a class="close-reveal-modal">&#215;</a>
+	  </div>
+
+
 	</ul>
       </section>
     </nav>

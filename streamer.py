@@ -186,6 +186,9 @@ def signup_user():
     email = request.forms.get("email")
     password = request.forms.get("password")
     confirm = request.forms.get("confirm_password")
+
+    if not "." in email and not "@" in email:
+        redirect("/signup/invalid")
     
     if (password == confirm):
         try:
@@ -230,6 +233,19 @@ def search():
     artist_results = cursor.fetchall()
     conn.close()
     return template("search", songs = song_results, artists = artist_results, albums = album_results, email = request.get_cookie("email"), is_admin = check_admin(request.get_cookie("email")))
+
+@post('/suggest')
+def suggest():
+    content = request.forms.get("content")
+    email = request.get_cookie("email")
+
+    if content is not "" and check_confirmed(email):
+        conn = sqlite3.connect("db/data.db")
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO Suggestions (user_email, content) VALUES (?, ?)", [content, email])
+        conn.commit()
+
+    redirect("/home")
 
 def authenticate_user(email, raw_password):
     global master_secret_key
