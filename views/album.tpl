@@ -134,6 +134,7 @@
     function init(){
         current = 0;
         audio = $('#audio_player');
+        audio[0].volume = 0.5;
         audio[0].play();
         playlist = $('#playlist');
 
