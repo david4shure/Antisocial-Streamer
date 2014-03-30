@@ -261,6 +261,28 @@ def suggest():
 
     redirect("/home")
 
+@get('/suggestions')
+def get_suggestions():
+    email = request.get_cookie("email")
+    
+    if email is None:
+        redirect("/login")
+
+    if not check_user_exists(email):
+        redirect("/logout")
+
+    if not check_admin(email):
+        redirect("/home")
+
+    conn = sqlite3.connect("db/data.db")
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT user_email, content FROM Suggestions")
+    suggestions = cursor.fetchall()
+    return template("suggestions", suggestions = suggestions, email = email, is_admin = check_admin(email))
+
+    
+
 def authenticate_user(email, raw_password):
     global master_secret_key
     

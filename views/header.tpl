@@ -40,6 +40,7 @@
 	    <a href="#">{{ email }}</a>
 	    <ul class="dropdown">
 	      <li><a href="/manage">Manage Users</a></li>
+	      <li><a href="/suggestions">View Suggestions</a></li>
 	    </ul>
 	  </li>
 	  % else:
