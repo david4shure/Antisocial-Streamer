@@ -7,7 +7,7 @@ An invite only web application for your MP3 music library with rendered album ar
 ![alt tag](http://i1306.photobucket.com/albums/s570/david4shure/request_zps1086c497.png)
 
 
-Requirements
+Dependencies
 ============
 
 Make sure you have python-sqlite3, python-eyeD3, python-bcrypt, python-gevent installed.
@@ -30,9 +30,13 @@ And enjoy your MP3 library in all of its glory from anywhere!
 Upcoming
 ========
 
-1. Admin users can edit metadata on albums, songs artists if incorrect or inaccurate
-2. Eventual support for FLAC, OGG and M4A files
-3. Better search page
-4. Dedicated artist pages where you sort through their albums
-5. Template inheritance / Code Refactor (Done)
-6. Suggestions functionality for music that users likes (Done)
+1. Admin users can edit metadata on albums, songs artists if incorrect or inaccurate (Future)
+2. Eventual support for FLAC, OGG and M4A files (Future)
+3. Better search page (Future)
+4. Dedicated artist pages where you sort through their albums (Future)
+5. Template inheritance / Code Refactor (Done, MS 4)
+6. Suggestions functionality for music that users likes (Done, MS 4)
+7. Local Media Playback (Done, MS 3)
+8. Album Art Rendering (Done, MS 3)
+9. Basic Search functionality (Done, MS 3)
+10. User invite system (Done, MS 3)
