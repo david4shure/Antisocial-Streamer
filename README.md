@@ -34,5 +34,5 @@ Upcoming
 2. Eventual support for FLAC, OGG and M4A files
 3. Better search page
 4. Dedicated artist pages where you sort through their albums
-5. Template inheritance
-6. Suggestions functionality for albums
+5. Template inheritance / Code Refactor (Done)
+6. Suggestions functionality for music that users likes (Done)
