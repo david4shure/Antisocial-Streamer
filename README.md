@@ -32,3 +32,7 @@ Upcoming
 
 1. Admin users can edit metadata on albums, songs artists if incorrect or inaccurate
 2. Eventual support for FLAC, OGG and M4A files
+3. Better search page
+4. Dedicated artist pages where you sort through their albums
+5. Template inheritance
+6. Suggestions functionality for albums
