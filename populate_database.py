@@ -95,4 +95,4 @@ def populate_db(directory, extension):
         
     conn.close()
 
-populate_db("~/", "*.mp3")
+populate_db("~/Downloads", "*.mp3")

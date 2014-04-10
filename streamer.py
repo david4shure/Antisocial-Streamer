@@ -62,7 +62,7 @@ def manage():
         
         confirmed_users = cursor.fetchall()
 
-        return template("manage", email=request.get_cookie("email"), unconfirmed_users = unconfirmed_users, confirmed_users = confirmed_users)
+        return template("manage", email=request.get_cookie("email"), unconfirmed_users = unconfirmed_users, confirmed_users = confirmed_users, is_admin = check_admin(request.get_cookie("email")))
 
 @post('/bestow')
 def bestow_admin_status():
