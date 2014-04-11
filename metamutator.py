@@ -1,11 +1,14 @@
-import eyeD3, os, fnmatch, mutagen
-from mutagen.easyid3 import EasyID3
+# ==================================
 
 # David Shure
 # This is a simple metadata editor
 # for use with multiple files of 
 # a certain type at a time
 
+# ==================================
+
+import eyeD3, os, fnmatch, mutagen
+from mutagen.easyid3 import EasyID3
 
 # find_files: string, string -> array<(string, string)>
 # finds all files that match a certain pattern and returns
