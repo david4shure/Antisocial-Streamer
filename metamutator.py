@@ -7,7 +7,7 @@
 
 # ==================================
 
-import eyeD3, os, fnmatch, mutagen
+import os, fnmatch, mutagen
 from mutagen.easyid3 import EasyID3
 
 # find_files: string, string -> array<(string, string)>
