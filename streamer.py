@@ -385,4 +385,4 @@ def check_user_exists(email):
     
     return not result is None
 
-run(host="0.0.0.0", port=8080, debug=True, server="gevent")
+run(host="0.0.0.0", port=80, debug=True, server="gevent")
