@@ -1,9 +1,9 @@
 % include('header.tpl', email=email, is_admin=is_admin)
-
+% from helpers import *
     <br>
     <br>
 
-    <h4 class="subheader text-center">{{songs[0][1].title()}}</h4>
+    <a href="/artist/{{ artist_id }}"><h4 class="subheader text-center">{{songs[0][1].title()}}</h4></a>
 
     <div class="row" data-equalizer>
       <div class="large-6 columns" data-equalizer-watch>

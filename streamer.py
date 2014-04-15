@@ -1,4 +1,5 @@
 import bcrypt, json, sqlite3, os, fnmatch, eyeD3, re
+from helpers import *
 from bottle import *
 from gevent import monkey; monkey.patch_all()
 
@@ -149,11 +150,41 @@ def album(album_id):
     conn = sqlite3.connect("db/data.db")
     cursor = conn.cursor()
     cursor.execute("SELECT album_name FROM Albums WHERE id = ?", [album_id])
-    album_name = cursor.fetchone()[0]
+    album_name = cursor.fetchone()
+    if album_name is not None:
+        album_name = album_name[0]
+    else:
+        return error404(None)
     cursor.execute("SELECT * FROM Songs WHERE album_name = ?", [album_name])
     results = cursor.fetchall()
+
+    artist_id = get_artist_id(results[0][1])
+    print artist_id
     
-    return template("album", songs=results, email=request.get_cookie("email"), album_id = album_id, is_admin = check_admin(request.get_cookie("email")), is_confirmed = check_confirmed(request.get_cookie("email")))
+    return template("album", songs=results, email=request.get_cookie("email"), album_id = album_id, is_admin = check_admin(request.get_cookie("email")), is_confirmed = check_confirmed(request.get_cookie("email")), artist_id = artist_id)
+
+@get('/artist/<artist_id>')
+def artist(artist_id):
+    if request.get_cookie("email") is None:
+        redirect("/login")
+        
+    if not check_user_exists(request.get_cookie("email")):
+        redirect("/logout")
+
+    conn = sqlite3.connect("db/data.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT artist_name FROM Artists WHERE id = ?", [artist_id])
+
+    result = cursor.fetchone()
+    
+    if result is not None:
+        artist_name = result[0]
+        
+        cursor.execute("SELECT id, album_name FROM Albums WHERE artist_name = ?", [artist_name])
+        albums = cursor.fetchall()
+        return template("artist", email = request.get_cookie("email"), is_admin=check_admin(request.get_cookie("email")), albums = albums, artist = artist_name)
+    else:
+        redirect("/home")
 
 @post('/auth')
 def authenticate():
@@ -237,6 +268,9 @@ def search():
     if not check_user_exists(request.get_cookie("email")):
         redirect("/logout")
 
+    if len(request.forms.get("search_criteria")) <= 2:
+        return template("search", songs = [], artists = [], albums = [], email = request.get_cookie("email"), is_admin = check_admin(request.get_cookie("email")), error=True)
+
     conn = sqlite3.connect("db/data.db")
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM Songs WHERE title LIKE '%" + " ".join(re.findall(r'\w+', request.forms.get("search_criteria").lower())) + "%'")
@@ -247,7 +281,7 @@ def search():
     artist_results = cursor.fetchall()
     conn.close()
 
-    return template("search", songs = song_results, artists = artist_results, albums = album_results, email = request.get_cookie("email"), is_admin = check_admin(request.get_cookie("email")))
+    return template("search", songs = song_results, artists = artist_results, albums = album_results, email = request.get_cookie("email"), is_admin = check_admin(request.get_cookie("email")), error=False)
 
 @post('/suggest')
 def suggest():
