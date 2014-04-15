@@ -149,7 +149,13 @@ def album(album_id):
 
     conn = sqlite3.connect("db/data.db")
     cursor = conn.cursor()
-    cursor.execute("SELECT album_name FROM Albums WHERE id = ?", [album_id])
+    try:
+        cursor.execute("UPDATE Albums SET hits = hits + 1 WHERE id = ?", [album_id])
+        cursor.execute("SELECT album_name FROM Albums WHERE id = ?", [album_id])
+    except Exception, e:
+        redirect(error403(None))
+
+    conn.commit()
     album_name = cursor.fetchone()
     if album_name is not None:
         album_name = album_name[0]
@@ -159,7 +165,6 @@ def album(album_id):
     results = cursor.fetchall()
 
     artist_id = get_artist_id(results[0][1])
-    print artist_id
     
     return template("album", songs=results, email=request.get_cookie("email"), album_id = album_id, is_admin = check_admin(request.get_cookie("email")), is_confirmed = check_confirmed(request.get_cookie("email")), artist_id = artist_id)
 
@@ -250,15 +255,14 @@ def home():
     cursor.execute("SELECT DISTINCT id, album_name FROM Albums WHERE cover_art_file_path IS NOT NULL and cover_art_file_name IS NOT NULL ORDER BY RANDOM() LIMIT 6")
     random_albums = cursor.fetchall()
     cursor = conn.cursor()
-    cursor.execute("SELECT songs.title, songs.album_name, songs.hits / 2, songs.artist_name, songs.id, albums.id FROM Songs INNER JOIN Albums ON Songs.album_name = Albums.album_name ORDER BY hits DESC LIMIT 10;")
-    top_songs = cursor.fetchall()
+    cursor.execute("SELECT id, album_name, artist_name, hits FROM Albums ORDER BY hits DESC LIMIT 10")
+    top_albums = cursor.fetchall()
     cursor.execute("SELECT album_name, artist_name, id FROM Albums ORDER BY id DESC LIMIT 10")
     recent_albums = cursor.fetchall()
 
     conn.close()
-
     
-    return template("home", email=request.get_cookie("email"), album_art_ids=random_albums, top_songs=top_songs, recent_albums = recent_albums, is_admin=check_admin(request.get_cookie("email")))
+    return template("home", email=request.get_cookie("email"), album_art_ids=random_albums, top_albums=top_albums, recent_albums = recent_albums, is_admin=check_admin(request.get_cookie("email")))
 
 @post('/search')
 def search():

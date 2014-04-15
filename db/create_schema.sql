@@ -33,6 +33,7 @@ CREATE TABLE Albums (
        cover_art_file_name TEXT(100),
        release_year TEXT(5),
        genre TEXT(50),
+       hits integer DEFAULT 0,
        UNIQUE(album_name),
        FOREIGN KEY (artist_name) REFERENCES Artists (artist_name)
 );

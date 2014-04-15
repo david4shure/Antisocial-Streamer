@@ -18,23 +18,21 @@
     </div>
 
   <div class="large-6 columns" style="margin-left: 2em;">
-    <h4 class="subheader" style="margin-bottom:1em;">Top songs</h4>
+    <h4 class="subheader" style="margin-bottom:1em;">Top Albums</h4>
     <table>
       <thead>
 	<tr>
 	  <th>Title</th>
 	  <th>Album</th>
-	  <th>Artist</th>
 	  <th>Hits</th>
 	</tr>
       </thead>
       <tbody>
-	% for song in top_songs:
+	% for album in top_albums:
 	<tr>
-	  <td><a href="/song/{{song[4]}}">{{ song[0].title() }}</a></td>
-	  <td><a href="/album/{{song[5]}}">{{ song[1].title() }}</a></td>
-	  <td><a href="/artist/{{ get_artist_id(song[3]) }}">{{ song[3].title() }}</a></td>
-	  <td>{{ song[2] }}</td>
+	  <td><a href="/album/{{album[0]}}">{{ album[1].title() }}</a></td>
+	  <td><a href="/artist/{{ get_artist_id(album[2]) }}">{{ album[2].title() }}</a></td>
+	  <td>{{ album[3] }}</td>
 	</tr>
 	% end
       </tbody>
