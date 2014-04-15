@@ -22,8 +22,8 @@
     <table>
       <thead>
 	<tr>
-	  <th>Title</th>
 	  <th>Album</th>
+	  <th>Artist</th>
 	  <th>Hits</th>
 	</tr>
       </thead>
