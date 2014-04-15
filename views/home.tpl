@@ -1,5 +1,5 @@
 % include('header.tpl', email=email, is_admin=is_admin)
-    
+% from helpers import *    
     <div class="row">
       <h4 class="subheader text-center">Random Picks</h4>
     </div>
@@ -33,7 +33,7 @@
 	<tr>
 	  <td><a href="/song/{{song[4]}}">{{ song[0].title() }}</a></td>
 	  <td><a href="/album/{{song[5]}}">{{ song[1].title() }}</a></td>
-	  <td><i>{{ song[3].title() }}</i></td>
+	  <td><a href="/artist/{{ get_artist_id(song[3]) }}">{{ song[3].title() }}</a></td>
 	  <td>{{ song[2] }}</td>
 	</tr>
 	% end
@@ -54,7 +54,7 @@
 	% for album in recent_albums:
 	<tr>
 	  <td><a href="/album/{{album[2]}}">{{ album[0].title() }}</a></td>
-	  <td>{{ album[1].title() }}</td>
+	  <td><a href="/artist/{{ get_artist_id(album[1]) }}">{{ album[1].title() }}</a></td>
 	</tr>
 	% end
       </tbody>
