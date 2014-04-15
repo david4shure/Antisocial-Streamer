@@ -1,4 +1,5 @@
 % include('header.tpl', email=email, is_admin=is_admin)
+% from helpers import get_album_id
 
     <h4 class="subheader text-center">Search Results</h4>
 
@@ -10,7 +11,7 @@
       % end
       % for song in songs:
       <div class="row">
-	  <a href="/song/{{ song[0] }}">{{ song[2].title() }}</a> by {{ song[1].title() }} on {{ song[3].title() }}
+	  <a href="/song/{{ song[0] }}">{{ song[2].title() }}</a> by {{ song[1].title() }} on <a href="/album/{{ get_album_id(song[3]) }}">{{ song[3].title() }}</a>
       </div>
       % end
     </fieldset>

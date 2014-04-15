@@ -246,6 +246,7 @@ def search():
     cursor.execute("SELECT * FROM Artists WHERE artist_name LIKE '%" + " ".join(re.findall(r'\w+', request.forms.get("search_criteria").lower())) + "%'")
     artist_results = cursor.fetchall()
     conn.close()
+
     return template("search", songs = song_results, artists = artist_results, albums = album_results, email = request.get_cookie("email"), is_admin = check_admin(request.get_cookie("email")))
 
 @post('/suggest')
@@ -281,6 +282,20 @@ def get_suggestions():
     suggestions = cursor.fetchall()
     return template("suggestions", suggestions = suggestions, email = email, is_admin = check_admin(email))
 
+
+def get_album_id(album_name):
+    conn = sqlite3.connect("db/data.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM Albums WHERE album_name = ?", [album_name])
+    
+    results = cursor.fetchone()
+
+    conn.close()
+
+    if results is not None:
+        return results[0]
+    else:
+        return None
     
 
 def authenticate_user(email, raw_password):
@@ -370,4 +385,4 @@ def check_user_exists(email):
     
     return not result is None
 
-run(host="0.0.0.0", port=80, debug=True, server="gevent")
+run(host="0.0.0.0", port=8080, debug=True, server="gevent")
