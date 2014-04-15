@@ -9,6 +9,10 @@ master_secret_key = ""
 with open("keys", "r") as keys:
     master_secret_key = keys.read()
 
+@error(500)
+def internalError(error):
+    return template("500")
+
 @error(404)
 def error404(error):
     return template("404")
@@ -149,24 +153,23 @@ def album(album_id):
 
     conn = sqlite3.connect("db/data.db")
     cursor = conn.cursor()
-    try:
-        cursor.execute("UPDATE Albums SET hits = hits + 1 WHERE id = ?", [album_id])
-        cursor.execute("SELECT album_name FROM Albums WHERE id = ?", [album_id])
-    except Exception, e:
-        redirect(error403(None))
 
+    cursor.execute("UPDATE Albums SET hits = hits + 1 WHERE id = ?", [album_id])
     conn.commit()
-    album_name = cursor.fetchone()
-    if album_name is not None:
-        album_name = album_name[0]
-    else:
-        return error404(None)
+    cursor.execute("SELECT album_name FROM Albums WHERE id = ?", [album_id])
+
+    album_name = cursor.fetchone()[0]
+
     cursor.execute("SELECT * FROM Songs WHERE album_name = ?", [album_name])
     results = cursor.fetchall()
 
-    artist_id = get_artist_id(results[0][1])
-    
-    return template("album", songs=results, email=request.get_cookie("email"), album_id = album_id, is_admin = check_admin(request.get_cookie("email")), is_confirmed = check_confirmed(request.get_cookie("email")), artist_id = artist_id)
+    if len(results) < 1:
+        return error500(None)
+    else:
+
+        artist_id = get_artist_id(results[0][1])
+        
+        return template("album", songs=results, email=request.get_cookie("email"), album_id = album_id, is_admin = check_admin(request.get_cookie("email")), is_confirmed = check_confirmed(request.get_cookie("email")), artist_id = artist_id)
 
 @get('/artist/<artist_id>')
 def artist(artist_id):
