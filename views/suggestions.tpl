@@ -11,8 +11,8 @@
     <table>	      
       <thead>
 	<tr>
-	  <th>Email</th>
 	  <th>Suggestion</th>
+	  <th>Email</th>
 	</tr>
       </thead>
       <tbody>
@@ -29,5 +29,8 @@
     <h4 class="subheader">There are no suggestions</h4>
     % end
     </div>
-</body>
+    
+    <script>$(document).foundation();</script>
+	
 
+</body>
