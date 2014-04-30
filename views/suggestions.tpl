@@ -1,7 +1,14 @@
 % include("header", email=email, is_admin=is_admin)
 
+<br>
+<br>
+<br>
+<br>
+
 % if len(suggestions) > 0:
-    <table>
+<div class="row">   
+  <div class="twelve columns text-center">	      
+    <table>	      
       <thead>
 	<tr>
 	  <th>Email</th>
@@ -21,5 +28,6 @@
     % else:
     <h4 class="subheader">There are no suggestions</h4>
     % end
+    </div>
 </body>
 

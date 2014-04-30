@@ -34,7 +34,7 @@ CREATE TABLE Albums (
        release_year TEXT(5),
        genre TEXT(50),
        hits integer DEFAULT 0,
-       UNIQUE(album_name),
+       UNIQUE(album_name, artist_name),
        FOREIGN KEY (artist_name) REFERENCES Artists (artist_name)
 );
 

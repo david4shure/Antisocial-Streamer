@@ -52,4 +52,4 @@ def edit_song_metadata(file_directory, file_name, new_title):
     print "Editing %s%s" % (file_directory, file_name)
 
 # example usage
-# edit_artist_metadata("/home/david/Downloads/Audiomachine - Tree of life", "*.mp3", "Audiomachine")
+edit_album_metadata("/home/david/Downloads/Journey - Greatest Hits (1990) 320 vtwin88cube/", "*.mp3", "greatest hits journey")
