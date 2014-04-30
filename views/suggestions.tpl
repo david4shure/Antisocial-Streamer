@@ -29,6 +29,9 @@
     <h4 class="subheader">There are no suggestions</h4>
     % end
     </div>
+
+    <script src="/static/jquery.js"></script>
+    <script src="/static/foundation.min.js"></script>
     
     <script>$(document).foundation();</script>
 	
