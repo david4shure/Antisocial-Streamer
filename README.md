@@ -49,10 +49,9 @@ Features
 1. Beautiful web interface for your MP3 music library
 2. Search through your library
 3. Play entire albums at a time, also indexes and renders album art
-4. Search through your library on keywords
-5. Users can only listen to your music if they are confirmed (by you)!
-6. Users can suggest music that they want.
-7. Dedicated artist pages where you look through all their albums
+4. Users can only listen to your music if they are confirmed (by you)!
+5. Users can suggest music that they want.
+6. Dedicated artist pages where you look through all their albums
 
 Upcoming
 ========
