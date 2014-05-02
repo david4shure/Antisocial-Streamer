@@ -18,18 +18,29 @@ sudo apt-get install python-sqlite python-eyeD3 python-bcrypt python-gevent pyth
 
 Running the application
 =======================
-To populate the db of all your music and cover art, simply edit populate_database.py,
-and add the directory you want it to scan. Then run
+To populate the db of all your music and cover art, we must initialize the database first.
+```shell
+sqlite3 db/data.db
+```
+Then we must load the schema into our sqlite3 database.
+
+```sql
+.read create_schema.sql
+```
+
+This initializes the database with it's schema. Now we can simply edit 
+populate_database.py, and add the directory you want it to scan. Then run
 
 ```shell
 python populate_database.py
 ```
 
-
 Once you have installed all of the requirements, simple run 
 ```shell
 sudo python streamer.py
 ```
+(Consider doing this in a screen instance or piping the output to a log, so when
+you close the terminal, it does not kill the server). 
 
 And enjoy your MP3 library in all of its glory from anywhere!
 
