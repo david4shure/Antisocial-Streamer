@@ -1,4 +1,4 @@
-import bcrypt, json, sqlite3, os, fnmatch, eyeD3, re
+import bcrypt, json, sqlite3, os, fnmatch, eyeD3, re, populate_database, subprocess, datetime
 from helpers import *
 from bottle import *
 from gevent import monkey; monkey.patch_all()
@@ -46,6 +46,10 @@ def woah():
         redirect("/login")
     return template("woah", email=request.get_cookie("email"))
 
+@get('/upload')
+def get_upload():
+    return template("upload", email=request.get_cookie("email"), is_admin=check_admin(request.get_cookie("email")))
+
 @get('/manage')
 def manage():
     if request.get_cookie("email") is None:
@@ -88,6 +92,25 @@ def exile_user():
     conn.commit()
     conn.close()
     redirect("/manage")
+
+@route('/upload', method='POST')
+def do_upload():
+    category   = request.forms.get('category')
+    upload     = request.files.get('upload')
+    name, ext = os.path.splitext(upload.filename)
+    if ext not in ('.mp3'):
+        return 'File extension not allowed.'
+
+    folder_name = datetime.now().strftime("%H%M%S%f")
+    upload_path = "/usr/local/music/" + folder_name
+
+    popen = subprocess.Popen("mkdir " + upload_path, shell=True)
+    popen.communicate()
+
+    upload.save(upload_path)
+    populate_database.populate_db(upload_path, "*.mp3")
+    
+    redirect("/home")
 
 
 @post('/confirm')
@@ -426,4 +449,4 @@ def check_user_exists(email):
     
     return not result is None
 
-run(host="0.0.0.0", port=80, debug=True, server="gevent")
+run(host="0.0.0.0", port=80, debug=False, server="gevent")

@@ -33,6 +33,7 @@
 	<!-- Right Nav Section -->
 	<ul class="right">
 
+
 	  <li class="active"><a href="/logout">Logout</a></li>
 
 	  % if is_admin:
@@ -41,6 +42,7 @@
 	    <ul class="dropdown">
 	      <li><a href="/manage">Manage Users</a></li>
 	      <li><a href="/suggestions">View Suggestions</a></li>
+
 	    </ul>
 	  </li>
 	  % else:

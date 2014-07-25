@@ -94,5 +94,3 @@ def populate_db(directory, extension):
         conn.commit()
         
     conn.close()
-
-populate_db("/home/david/Downloads/Queen - A Night At The Opera [smb]/", "*.mp3")
