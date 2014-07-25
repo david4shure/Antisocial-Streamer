@@ -58,3 +58,4 @@ Upcoming
 
 1. Admin users can edit metadata on albums, songs artists if incorrect or inaccurate (Future)
 2. Eventual support for FLAC, OGG and M4A files (Future)
+3. Cloud deployment on the way! Lets go.
