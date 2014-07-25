@@ -13,7 +13,7 @@ Dependencies
 Make sure you have python-sqlite3, python-eyeD3, python-bcrypt, python-gevent, python-mutagen installed.
   To install run 
 ```shell
-sudo apt-get install python-sqlite python-eyeD3 python-bcrypt python-gevent python-mutagen
+sudo apt-get install python-sqlite python-eyeD3 python-bcrypt python-gevent python-mutagen sqlite3
 ```
 
 Running the application
