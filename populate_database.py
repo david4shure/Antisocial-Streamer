@@ -95,4 +95,4 @@ def populate_db(directory, extension):
         
     conn.close()
 
-populate_db("/home/david/Downloads/Queen - A Night At The Opera [smb]/", "*.mp3")
+# populate_db("/home/david/Downloads/5 Seconds of Summer - 5 Seconds of Summer (Deluxe Edition)/", "*.mp3")
