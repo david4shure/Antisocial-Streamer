@@ -53,6 +53,8 @@ def woah():
 
 @get('/upload')
 def get_upload():
+    if request.get_cookie("email", secret = secret) is None:
+        redirect("/login")
     return template("upload", email=request.get_cookie("email", secret = secret), is_admin=check_admin(request.get_cookie("email", secret = secret)))
 
 @get('/manage')
