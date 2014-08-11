@@ -1,9 +1,14 @@
 % include('header.tpl', email=email, is_admin=is_admin)
 % from helpers import *
+
+
+
     <br>
     <br>
 
     <a href="/artist/{{ artist_id }}"><h4 class="subheader text-center">{{songs[0][1].title()}}</h4></a>
+
+
 
     <div class="row" data-equalizer>
       <div class="large-6 columns" data-equalizer-watch>
@@ -16,6 +21,10 @@
 	    <li><a href="/song/{{song[0]}}">{{song[2].title()}}</a></li>
 	    % end
 	  </ul>
+
+	  % if is_admin:
+	  <a href="/modify/album/{{album_id}}">Change album art</a>
+	  % end 
 
 	</fieldset>
       </div>

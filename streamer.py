@@ -48,6 +48,7 @@ def serve_images(filename):
 @get('/woah')
 def woah():
     if request.get_cookie("email", secret = secret) is None:
+<<<<<<< Updated upstream
         redirect("/login")
     return template("woah", email=request.get_cookie("email", secret = secret))
 
@@ -59,7 +60,7 @@ def get_upload():
 
 @get('/upload')
 def get_upload():
-    return template("upload", email=request.get_cookie("email"), is_admin=check_admin(request.get_cookie("email")))
+    return template("upload.tpl")
 
 @get('/manage')
 def manage():
@@ -124,6 +125,43 @@ def do_upload():
     populate_database.populate_db(upload_path, "*.mp3")
     redirect("/home")
 
+@get('/modify/album/<album_id>')
+def modify_album(album_id):
+    email = request.get_cookie("email", secret = secret)
+    is_admin = check_admin(email)
+
+    if email is None:
+        redirect("/login")
+
+    return template("change_album", email = email, is_admin = is_admin, album_id = album_id)
+
+@post('/modify/album/<album_id>')
+def add_album_art_to_album(album_id):
+    email = request.get_cookie("email", secret = secret)
+    is_admin = check_admin(email)
+
+    if email is None:
+        redirect("/login")
+        
+    upload = request.files.get("image_file")
+    folder_name = datetime.now().strftime("%H%M%S%f")
+    upload_path = "/usr/local/music/" + folder_name + "/"
+    file_name, file_ext = os.path.splitext(upload.filename)
+    
+    popen = subprocess.Popen("mkdir " + upload_path, shell=True)
+    popen.communicate()
+
+    upload.save(upload_path)
+    conn = sqlite3.connect("db/data.db")
+    cursor = conn.cursor()
+    cursor.execute("UPDATE albums SET cover_art_file_path = ?, cover_art_file_name = ? WHERE id = ?", [upload_path, upload.filename, album_id])
+    conn.commit()
+    conn.close()
+    redirect("/album/" + album_id)
+
+    
+
+>>>>>>> Stashed changes
 @post('/confirm')
 def confirm_user():
     email = request.forms.get("confirm_user")
