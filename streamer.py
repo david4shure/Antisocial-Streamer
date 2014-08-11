@@ -110,7 +110,7 @@ def do_upload():
 
     for file in uploaded_files:
         name, ext = os.path.splitext(file.filename)
-        if ext not in ('.mp3'):
+        if ext not in ['.mp3', '.jpg']:
             return "Extension: " + ext + " not allowed!"
 
     folder_name = datetime.now().strftime("%H%M%S%f")
