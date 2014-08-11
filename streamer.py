@@ -159,8 +159,6 @@ def add_album_art_to_album(album_id):
     redirect("/album/" + album_id)
 
     
-
->>>>>>> Stashed changes
 @post('/confirm')
 def confirm_user():
     email = request.forms.get("confirm_user")
