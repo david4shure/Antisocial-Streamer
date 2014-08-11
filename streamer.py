@@ -60,13 +60,11 @@ def woah():
 
 @get('/upload')
 def get_upload():
-    if request.get_cookie("email", secret = secret) is None:
+    email = request.get_cookie("email", secret = secret)
+    if email is None:
         redirect("/login")
-    return template("upload", email=request.get_cookie("email", secret = secret), is_admin=check_admin(request.get_cookie("email", secret = secret)))
-
-@get('/upload')
-def get_upload():
-    return template("upload.tpl")
+    
+    return template("upload", email=email, is_admin=check_admin(email))
 
 @get('/manage')
 def manage():
