@@ -48,7 +48,6 @@ def serve_images(filename):
 @get('/woah')
 def woah():
     if request.get_cookie("email", secret = secret) is None:
-<<<<<<< Updated upstream
         redirect("/login")
     return template("woah", email=request.get_cookie("email", secret = secret))
 
