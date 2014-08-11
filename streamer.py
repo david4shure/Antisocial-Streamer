@@ -51,13 +51,6 @@ def woah():
         redirect("/login")
     return template("woah", email=request.get_cookie("email", secret = secret))
 
-# @get('/browse')
-# def browse():
-#     email = request.get_cookie("email", secret = secret)
-#     if request.get_cookie("email", secret = secret) is None:
-#         redirect("/login")
-#     return template("browse", email=email, is_admin = check_admin(email))
-
 @get('/upload')
 def get_upload():
     email = request.get_cookie("email", secret = secret)
@@ -138,6 +131,35 @@ def modify_album(album_id):
         redirect("/login")
 
     return template("change_album", email = email, is_admin = is_admin, album_id = album_id)
+
+@get('/browse')
+def browse():
+    email = request.get_cookie("email", secret = secret)
+    
+    if email is None:
+        redirect("/login")
+
+    if not check_user_exists(email):
+        redirect("/logout")
+
+    conn = sqlite3.connect("db/data.db")
+    cursor = conn.cursor()
+
+    cursor.execute("select distinct genre, id from albums")
+    albums = cursor.fetchall()
+    conn.close()
+
+    genre_pairs = {}
+
+    for entry in albums:
+        try:
+            genre_pairs[entry[0]].append(entry[1]) 
+        except KeyError:
+            genre_pairs[entry[0]] = []
+            genre_pairs[entry[0]].append(entry[1]) 
+
+    return template("browse", genre_pairs=genre_pairs, email = email, is_admin = check_admin(email))
+
 
 @post('/modify/album/<album_id>')
 def add_album_art_to_album(album_id):
