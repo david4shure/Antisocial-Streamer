@@ -5,6 +5,7 @@ from gevent import monkey; monkey.patch_all()
 
 
 master_secret_key = ""
+secret = "this is a secret...she..U)(%*R$)(()%*#(%*&*(YFUIHJ SD YFKGHJ"
 
 with open("keys", "r") as keys:
     master_secret_key = keys.read()
@@ -19,7 +20,7 @@ def error404(error):
 
 @error(403)
 def error403(error):
-    return template("403", email=request.get_cookie("email"))
+    return template("403", email=request.get_cookie("email", secret = secret))
 
 @get('/')
 def index():
@@ -27,7 +28,7 @@ def index():
 
 @get('/login')
 def login():
-    if request.get_cookie("email") is None:
+    if request.get_cookie("email", secret = secret) is None:
         return template("login", error=None)
     else:
         redirect("/home")
@@ -40,11 +41,21 @@ def login_error(error):
 def serve_static(filename):
     return static_file(filename, root="./static")
 
+@get('/images/<filename>')
+def serve_images(filename):
+    return static_file(filename, root="./images")
+
 @get('/woah')
 def woah():
-    if request.get_cookie("email") is None:
+    if request.get_cookie("email", secret = secret) is None:
         redirect("/login")
-    return template("woah", email=request.get_cookie("email"))
+    return template("woah", email=request.get_cookie("email", secret = secret))
+
+@get('/upload')
+def get_upload():
+    if request.get_cookie("email", secret = secret) is None:
+        redirect("/login")
+    return template("upload", email=request.get_cookie("email", secret = secret), is_admin=check_admin(request.get_cookie("email", secret = secret)))
 
 @get('/upload')
 def get_upload():
@@ -52,13 +63,13 @@ def get_upload():
 
 @get('/manage')
 def manage():
-    if request.get_cookie("email") is None:
+    if request.get_cookie("email", secret = secret) is None:
         redirect("/login")
 
-    if not check_user_exists(request.get_cookie("email")):
+    if not check_user_exists(request.get_cookie("email", secret = secret)):
         redirect("/logout")
 
-    if not check_admin(request.get_cookie("email")):
+    if not check_admin(request.get_cookie("email", secret = secret)):
         return error403(None)
     else:
         conn = sqlite3.connect("db/data.db")
@@ -67,11 +78,11 @@ def manage():
         
         unconfirmed_users = cursor.fetchall()
 
-        cursor.execute("SELECT email FROM Users WHERE is_admin = 0 AND is_confirmed = 1 AND NOT email = ?", [request.get_cookie("email")])
+        cursor.execute("SELECT email FROM Users WHERE is_admin = 0 AND is_confirmed = 1 AND NOT email = ?", [request.get_cookie("email", secret = secret)])
         
         confirmed_users = cursor.fetchall()
 
-        return template("manage", email=request.get_cookie("email"), unconfirmed_users = unconfirmed_users, confirmed_users = confirmed_users, is_admin = check_admin(request.get_cookie("email")))
+        return template("manage", email=request.get_cookie("email", secret = secret), unconfirmed_users = unconfirmed_users, confirmed_users = confirmed_users, is_admin = check_admin(request.get_cookie("email", secret = secret)))
 
 @post('/bestow')
 def bestow_admin_status():
@@ -95,23 +106,23 @@ def exile_user():
 
 @route('/upload', method='POST')
 def do_upload():
-    category   = request.forms.get('category')
-    upload     = request.files.get('upload')
-    name, ext = os.path.splitext(upload.filename)
-    if ext not in ('.mp3'):
-        return 'File extension not allowed.'
+    uploaded_files = request.files.getlist("upload")
+
+    for file in uploaded_files:
+        name, ext = os.path.splitext(file.filename)
+        if ext not in ('.mp3'):
+            return "Extension: " + ext + " not allowed!"
 
     folder_name = datetime.now().strftime("%H%M%S%f")
-    upload_path = "/usr/local/music/" + folder_name
-
+    upload_path = "/media/external/" + folder_name
     popen = subprocess.Popen("mkdir " + upload_path, shell=True)
     popen.communicate()
 
-    upload.save(upload_path)
-    populate_database.populate_db(upload_path, "*.mp3")
-    
-    redirect("/home")
+    for file in uploaded_files:
+        file.save(upload_path)
 
+    populate_database.populate_db(upload_path, "*.mp3")
+    redirect("/home")
 
 @post('/confirm')
 def confirm_user():
@@ -125,12 +136,12 @@ def confirm_user():
 
 @get('/song/<music_id>')
 def serve_music(music_id):
-    if request.get_cookie("email") is None:
+    if request.get_cookie("email", secret = secret) is None:
         redirect("/login")
     conn = sqlite3.connect("db/data.db")
     cursor = conn.cursor()
 
-    cursor.execute("SELECT is_confirmed FROM Users WHERE email = ?", [request.get_cookie("email")])
+    cursor.execute("SELECT is_confirmed FROM Users WHERE email = ?", [request.get_cookie("email", secret = secret)])
 
     can_listen = cursor.fetchone()[0]
 
@@ -152,7 +163,7 @@ def serve_music(music_id):
 @get('/art/<album_id>')
 def art_files(album_id):
 
-    if request.get_cookie("email") is None:
+    if request.get_cookie("email", secret = secret) is None:
         redirect("/login")
 
     conn = sqlite3.connect("db/data.db")
@@ -168,10 +179,10 @@ def art_files(album_id):
 @get('/album/<album_id>')
 def album(album_id):
 
-    if request.get_cookie("email") is None:
+    if request.get_cookie("email", secret = secret) is None:
         redirect("/login")
         
-    if not check_user_exists(request.get_cookie("email")):
+    if not check_user_exists(request.get_cookie("email", secret = secret)):
         redirect("/logout")
 
     conn = sqlite3.connect("db/data.db")
@@ -192,14 +203,14 @@ def album(album_id):
 
         artist_id = get_artist_id(results[0][1])
         
-        return template("album", songs=results, email=request.get_cookie("email"), album_id = album_id, is_admin = check_admin(request.get_cookie("email")), is_confirmed = check_confirmed(request.get_cookie("email")), artist_id = artist_id)
+        return template("album", songs=results, email=request.get_cookie("email", secret = secret), album_id = album_id, is_admin = check_admin(request.get_cookie("email", secret = secret)), is_confirmed = check_confirmed(request.get_cookie("email", secret = secret)), artist_id = artist_id)
 
 @get('/artist/<artist_id>')
 def artist(artist_id):
-    if request.get_cookie("email") is None:
+    if request.get_cookie("email", secret = secret) is None:
         redirect("/login")
         
-    if not check_user_exists(request.get_cookie("email")):
+    if not check_user_exists(request.get_cookie("email", secret = secret)):
         redirect("/logout")
 
     conn = sqlite3.connect("db/data.db")
@@ -213,14 +224,14 @@ def artist(artist_id):
         
         cursor.execute("SELECT id, album_name FROM Albums WHERE artist_name = ?", [artist_name])
         albums = cursor.fetchall()
-        return template("artist", email = request.get_cookie("email"), is_admin=check_admin(request.get_cookie("email")), albums = albums, artist = artist_name)
+        return template("artist", email = request.get_cookie("email", secret = secret), is_admin=check_admin(request.get_cookie("email", secret = secret)), albums = albums, artist = artist_name)
     else:
         redirect("/home")
 
 @post('/auth')
 def authenticate():
     global master_secret_key
-    email = request.forms.get("email")
+    email = request.forms.get("email").lower()
     raw_password = request.forms.get("password")
 
     auth = authenticate_user(email, raw_password)
@@ -230,12 +241,12 @@ def authenticate():
     elif not auth:
         redirect("/login/auth")
     elif auth:
-        response.set_cookie("email", email)
+        response.set_cookie("email", email, secret = secret)
         redirect("/home")
 
 @get('/signup')
 def signup():
-    if request.get_cookie("email") is not None:
+    if request.get_cookie("email", secret = secret) is not None:
         redirect("/home")
     else:
         return template("signup", error=None)
@@ -251,7 +262,7 @@ def signup_error(error):
 
 @post('/signup')
 def signup_user():
-    email = request.forms.get("email")
+    email = request.forms.get("email").lower()
     password = request.forms.get("password")
     confirm = request.forms.get("confirm_password")
 
@@ -261,7 +272,7 @@ def signup_user():
     if (password == confirm):
         try:
             create_user(email, password, False)
-            response.set_cookie("email", email)
+            response.set_cookie("email", email, secret = secret)
             redirect("/home")
         except sqlite3.IntegrityError:
             redirect("/signup/dup")
@@ -270,10 +281,10 @@ def signup_user():
 
 @get('/home')
 def home():
-    if request.get_cookie("email") is None:
+    if request.get_cookie("email", secret = secret) is None:
         redirect("/login")
 
-    if not check_user_exists(request.get_cookie("email")):
+    if not check_user_exists(request.get_cookie("email", secret = secret)):
         redirect("/logout")
         
     conn = sqlite3.connect("db/data.db")
@@ -288,18 +299,18 @@ def home():
 
     conn.close()
     
-    return template("home", email=request.get_cookie("email"), album_art_ids=random_albums, top_albums=top_albums, recent_albums = recent_albums, is_admin=check_admin(request.get_cookie("email")))
+    return template("home", email=request.get_cookie("email", secret = secret), album_art_ids=random_albums, top_albums=top_albums, recent_albums = recent_albums, is_admin=check_admin(request.get_cookie("email", secret = secret)))
 
 @post('/search')
 def search():
-    if request.get_cookie("email") is None:
+    if request.get_cookie("email", secret = secret) is None:
         redirect("/login")
 
-    if not check_user_exists(request.get_cookie("email")):
+    if not check_user_exists(request.get_cookie("email", secret = secret)):
         redirect("/logout")
 
     if len(request.forms.get("search_criteria")) <= 2:
-        return template("search", songs = [], artists = [], albums = [], email = request.get_cookie("email"), is_admin = check_admin(request.get_cookie("email")), error=True)
+        return template("search", songs = [], artists = [], albums = [], email = request.get_cookie("email", secret = secret), is_admin = check_admin(request.get_cookie("email", secret = secret)), error=True)
 
     conn = sqlite3.connect("db/data.db")
     cursor = conn.cursor()
@@ -311,12 +322,12 @@ def search():
     artist_results = cursor.fetchall()
     conn.close()
 
-    return template("search", songs = song_results, artists = artist_results, albums = album_results, email = request.get_cookie("email"), is_admin = check_admin(request.get_cookie("email")), error=False)
+    return template("search", songs = song_results, artists = artist_results, albums = album_results, email = request.get_cookie("email", secret = secret), is_admin = check_admin(request.get_cookie("email", secret = secret)), error=False)
 
 @post('/suggest')
 def suggest():
     content = request.forms.get("content")
-    email = request.get_cookie("email")
+    email = request.get_cookie("email", secret = secret)
 
     if content is not "" and check_confirmed(email):
         conn = sqlite3.connect("db/data.db")
@@ -328,7 +339,7 @@ def suggest():
 
 @get('/suggestions')
 def get_suggestions():
-    email = request.get_cookie("email")
+    email = request.get_cookie("email", secret = secret)
     
     if email is None:
         redirect("/login")

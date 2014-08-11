@@ -1,7 +1,8 @@
-% include('header.tpl', email=email, is_admin=is_admin)
+% include('header.tpl', email=email, is_admin = is_admin)
 
-<form action="/upload" method="post" enctype="multipart/form-data">
-      Category:      <input type="text" name="category">
-      Select a file: <input type="file" name="upload">
-      <input type="submit" value="Start upload">
+<br><br><br><br>
+
+<form method="POST" enctype="multipart/form-data" action="/upload">
+   <input type="file" name="upload" multiple="">
+   <input type="submit" value="add">
 </form>
