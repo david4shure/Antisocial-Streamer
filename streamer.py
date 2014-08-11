@@ -51,12 +51,12 @@ def woah():
         redirect("/login")
     return template("woah", email=request.get_cookie("email", secret = secret))
 
-@get('/browse')
-def browse():
-    email = request.get_cookie("email", secret = secret)
-    if request.get_cookie("email", secret = secret) is None:
-        redirect("/login")
-    return template("browse", email=email, is_admin = check_admin(email))
+# @get('/browse')
+# def browse():
+#     email = request.get_cookie("email", secret = secret)
+#     if request.get_cookie("email", secret = secret) is None:
+#         redirect("/login")
+#     return template("browse", email=email, is_admin = check_admin(email))
 
 @get('/upload')
 def get_upload():
