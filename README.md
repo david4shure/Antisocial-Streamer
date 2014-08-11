@@ -52,6 +52,7 @@ Features
 4. Users can only listen to your music if they are confirmed (by you)!
 5. Users can suggest music that they want.
 6. Dedicated artist pages where you look through all their albums
+7. You can now upload entire albums at a time, and change album art albums.
 
 Upcoming
 ========
