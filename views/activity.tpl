@@ -34,3 +34,7 @@
   <div class="medium-10 columns">
   </div>
 </div>
+
+<script>$(document).foundation();</script>
+</body>
+</html>
