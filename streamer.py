@@ -218,6 +218,7 @@ def serve_music(music_id):
     file_name = result[1]
 
     cursor.execute("UPDATE Songs SET hits = hits + 1 WHERE id = ?", [music_id])
+    cursor.execute("INSERT INTO Hits (ip, email, song_id) VALUES (?, ?, ?)", [request.environ.get('REMOTE_ADDR'), request.get_cookie("email", secret = secret), music_id])
     conn.commit()
     conn.close()
     return static_file(file_name, root=file_path)

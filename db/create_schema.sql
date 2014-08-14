@@ -43,3 +43,12 @@ CREATE TABLE Suggestions (
        content TEXT(500) NOT NULL,
        user_email varchar(100) NOT NULL
 );
+
+CREATE TABLE Hits (
+      id integer PRIMARY KEY,
+      ip TEXT(15) NOT NULL,
+      email varchar(40) NOT NULL,
+      song_id integer NOT NULL,
+      FOREIGN KEY (email) REFERENCES Users (email),
+      FOREIGN KEY (song_id) REFERENCES Songs (id)
+);
