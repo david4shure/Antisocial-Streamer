@@ -223,6 +223,20 @@ def serve_music(music_id):
     conn.close()
     return static_file(file_name, root=file_path)
 
+@get('/activity')
+def activity():
+    email = request.get_cookie("email", secret = secret)
+
+    if email is None:
+        redirect("/login")
+
+    conn = sqlite3.connect("db/data.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT Hits.ip, Hits.email, Songs.title, Songs.album_name, Albums.id FROM Hits JOIN songs ON Hits.song_id = Songs.id JOIN Albums ON Songs.album_name = Albums.album_name ORDER BY Hits.id DESC LIMIT 25")
+    results = cursor.fetchall()
+    return template("activity", email = email, is_admin = check_admin(email), hits = results)
+    
+
 @get('/art/<album_id>')
 def art_files(album_id):
 
